@@ -41,16 +41,16 @@ body {
 #bg-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.25);
   z-index: 2;
   transition: opacity 1s ease;
 }
 
-/* ── İŞARETLEDİĞİN EN ÜST KATA YERLEŞTİRİLEN MUM (Milimetrik Ayarlı) ── */
+/* ── TAM ORTALANMIŞ VE PASTAYA OTURAN MUM ── */
 #candle-container {
   position: absolute;
-  top: 41%; /* Görseldeki en üst kata tam oturması için dikey konum */
-  left: 56%; /* Pastanın üst katının yataydaki merkezi hizası */
+  top: 41%; /* Dikeyde pastanın en üst katının hizası */
+  left: 50%; /* Tam yatay merkez */
   transform: translate(-50%, -100%);
   z-index: 5;
   display: flex;
@@ -194,12 +194,12 @@ body {
   50% { transform: scale(1.03); }
 }
 
-/* ── HEDİYE EKRANI ── */
+/* ── HEDİYE EKRANI (Sorunsuz çalışması için dışarı taşındı) ── */
 #gift-screen {
   display: none;
   position: fixed;
   inset: 0;
-  z-index: 20;
+  z-index: 120; /* Sahne kapandığında en üstte görünmesi için yükseltildi */
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -282,11 +282,11 @@ body {
 /* Telefon dikey/yatay ekran uyumu */
 @media (max-aspect-ratio: 1/1) {
   #bg-image-container {
-    background-position: 42% bottom;
+    background-position: center bottom;
   }
   #candle-container {
-    top: 41.5%;
-    left: 58.5%; /* Mobilde en üst kata tam hizalama */
+    top: 41%;
+    left: 50%;
   }
 }
 
@@ -298,7 +298,7 @@ body {
 <div id="bg-image-container"></div>
 <div id="bg-overlay"></div>
 
-<!-- Milimetrik Konumlandırılmış Mum -->
+<!-- Tam Ortalanmış Mum -->
 <div id="candle-container">
   <div id="flame" class="candle-flame"></div>
   <div class="candle-wick"></div>
@@ -309,24 +309,25 @@ body {
 <div id="balloon-curtain"></div>
 <div id="confetti-container"></div>
 
+<!-- Ana Söndürme Sahnesi -->
 <main id="stage">
-  <!-- Buton -->
   <div id="blow-tip">Mumu söndürmek için dokunun ve üfleyin! 🌬️</div>
-
-  <div id="gift-screen">
-    <div class="gift-image-card" onclick="openGift(event)">
-      <img src="hediyeler.jpeg" alt="Hediye Kutuları" id="gift-box-img">
-    </div>
-    
-    <div id="letter">
-      <p>
-        On this very special day, I want to thank you for your endless support, kindness, and dedication. Thank you for always believing in us and encouraging us to do our best.<br><br>
-        May this new year of your life bring you abundant health, endless happiness, and peace. May all your dreams come true.
-        <strong>Happy Birthday! 🎂✨</strong>
-      </p>
-    </div>
-  </div>
 </main>
+
+<!-- Hediye ve Mektup Ekranı (Sahne Dışında Sona Alındı) -->
+<div id="gift-screen">
+  <div class="gift-image-card" onclick="openGift(event)">
+    <img src="hediyeler.jpeg" alt="Hediye Kutuları" id="gift-box-img">
+  </div>
+  
+  <div id="letter">
+    <p>
+      On this very special day, I want to thank you for your endless support, kindness, and dedication. Thank you for always believing in us and encouraging us to do our best.<br><br>
+      May this new year of your life bring you abundant health, endless happiness, and peace. May all your dreams come true.
+      <strong>Happy Birthday! 🎂✨</strong>
+    </p>
+  </div>
+</div>
 
 <script>
 const colors = ['#f97316', '#d97706', '#fed7aa', '#ffedd5', '#ca8a04', '#ea580c', '#fef3c7'];
@@ -346,24 +347,24 @@ for(let i=0; i<80; i++){
   curtain.appendChild(b);
 }
 
-// Tıklama ve Üfleme Dizisi
+// Tıklama ve Gecikme Mekanizması
 function triggerBlowSequence() {
   if (isBlown) return;
   isBlown = true;
 
   const tip = document.getElementById('blow-tip');
   
-  // Yazı anında güncelleniyor
   tip.innerHTML = "Üfleniyor... 🌬️💨";
   tip.style.background = "linear-gradient(135deg, #0284c7, #0369a1)"; 
   tip.style.animation = "none";
 
-  // Tam 2 saniye sonra söndür
+  // Tam 2 saniye bekletiyoruz
   setTimeout(() => {
     blowOut();
   }, 2000);
 }
 
+// Mumun Sönmesi ve Geçiş
 function blowOut() {
   document.getElementById('flame').classList.add('out');
   document.getElementById('smoke').classList.add('active');
@@ -371,20 +372,23 @@ function blowOut() {
   
   createConfetti();
 
+  // Arka planı ve mumu karart
   setTimeout(() => {
     document.getElementById('bg-image-container').style.opacity = '0';
     document.getElementById('bg-overlay').style.opacity = '0';
     document.getElementById('candle-container').style.opacity = '0';
   }, 600);
 
+  // Hediye paketini göster
   setTimeout(() => {
     document.getElementById('stage').style.display = 'none';
     document.getElementById('gift-screen').style.display = 'flex';
   }, 1500);
 }
 
+// Hediye paketine tıklanınca mektubu açma
 function openGift(event) {
-  event.stopPropagation(); // Sayfa tıklamasının mektup ekranında tetiklenmesini engeller
+  event.stopPropagation(); // Sayfa genelindeki tıklama dinleyicisinin mektubu kapatmasını önler
   document.querySelector('.gift-image-card').style.display = 'none';
   document.getElementById('letter').style.display = 'block';
   createConfetti();
