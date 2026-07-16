@@ -16,47 +16,65 @@
   --color-peach: #ffedd5;
   --color-champagne: #ca8a04;
 }
-html,body{width:100%;height:100%;overflow:hidden;}
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background-color: #150901; /* Arka plan boşlukları için koyu şık ton */
+}
 body {
   font-family:'Poppins',sans-serif;
-  background-color: #1c0d02;
   display:flex;
   align-items:center;
   justify-content:center;
   perspective: 1000px;
 }
 
-/* ── 1. SAYFA: DOĞUM GÜNÜ & PASTA SAYFASI ── */
+/* ── 1. SAYFA: DOĞUM GÜNÜ & PASTA SAHNESİ (BİLGİSAYAR ODAKLI) ── */
 #cake-page {
   position: fixed;
   inset: 0;
   z-index: 10;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 1s ease;
+}
+
+/* 🖥️ KUSURSUZLUK KUTUSU: Resmin oranını (16:9) korur, mumun kaymasını tamamen engeller */
+.canvas-container {
+  position: relative;
+  width: 100vw;
+  height: 56.25vw; /* 16:9 En-Boy Oranı */
+  max-width: 177.78vh; /* Ekran yüksekliğine göre taşmayı önler */
+  max-height: 100vh;
+  box-shadow: 0 0 100px rgba(0,0,0,0.8);
+  overflow: hidden;
+  display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
-  padding-bottom: clamp(30px, 11vh, 70px);
-  cursor: pointer;
-  transition: opacity 1s ease; /* Kararma geçiş süresi */
 }
 
 #bg-image-container {
   position: absolute;
   inset: 0;
   background-image: url('arka-plan.jpeg');
-  background-size: cover;
-  background-position: center center;
+  background-size: 100% 100%; /* Resmi tam oturtarak kaymayı sıfırlar */
+  background-position: center;
+  background-repeat: no-repeat;
   z-index: 1;
 }
 
 #bg-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.2);
   z-index: 2;
 }
 
-/* 📍 PASTA ÜZERİNE HASSAS ORTALANMIŞ MUM */
+/* 📍 PASTA ÜSTÜNE TAM SABİTLENMİŞ MUM (Görsel oranına göre kilitlendi) */
 #candle-container {
   position: absolute;
   top: 51.5%; 
@@ -70,8 +88,8 @@ body {
 
 /* Mum Gövdesi */
 .candle-body {
-  width: 10px;
-  height: 50px;
+  width: clamp(6px, 0.6vw, 10px);
+  height: clamp(30px, 3.2vw, 50px);
   background: linear-gradient(to right, #ffffff, #fef08a, #f59e0b);
   border-radius: 3px;
   position: relative;
@@ -81,22 +99,22 @@ body {
 /* Mum Fitili */
 .candle-wick {
   width: 2px;
-  height: 10px;
+  height: clamp(6px, 0.6vw, 10px);
   background-color: #111827;
   position: absolute;
-  top: -10px;
+  top: calc(clamp(6px, 0.6vw, 10px) * -1);
   left: 50%;
   transform: translateX(-50%);
 }
 
 /* Yanıp Sönen Doğal Alev */
 .candle-flame {
-  width: 14px;
-  height: 30px;
+  width: clamp(9px, 0.9vw, 14px);
+  height: clamp(20px, 2vw, 30px);
   background: radial-gradient(ellipse at bottom, #ffffff 15%, #fef08a 40%, #f97316 70%, #dc2626 100%);
   border-radius: 50% 50% 20% 20% / 60% 60% 40% 40%;
   position: absolute;
-  top: -36px;
+  top: calc((clamp(20px, 2vw, 30px) + clamp(6px, 0.6vw, 10px)) * -1.05);
   left: 50%;
   transform: translateX(-50%);
   box-shadow: 0 0 20px #f59e0b, 0 0 40px #ef4444;
@@ -139,17 +157,17 @@ body {
 
 /* Bilgilendirme Butonu */
 #blow-tip {
-  position: relative;
-  font-size: clamp(0.85rem, 3.8vw, 1.05rem);
+  position: absolute;
+  bottom: 8%;
+  font-size: clamp(0.85rem, 1.2vw, 1.1rem);
   font-weight: 700;
   color: #fff;
   background: linear-gradient(135deg, var(--color-orange), var(--color-gold));
-  padding: 14px 28px;
+  padding: 12px 28px;
   border-radius: 30px;
   box-shadow: 0 10px 25px rgba(217, 119, 6, 0.5);
   text-align: center;
   border: 2px solid #fff;
-  max-width: 90%;
   z-index: 15;
   animation: pulseButton 1.5s ease-in-out infinite;
   transition: all 0.4s ease;
@@ -186,11 +204,11 @@ body {
 /* 🎁 CSS HEDİYE KUTUSU */
 .gift-box {
   position: relative;
-  width: 150px;
-  height: 150px;
+  width: 160px;
+  height: 160px;
   background: #e11d48; 
   border-radius: 12px;
-  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.18);
   cursor: pointer;
   transition: transform 0.3s ease;
   animation: bounceGift 2s infinite ease-in-out;
@@ -204,7 +222,7 @@ body {
   position: absolute;
   left: 50%;
   top: 0;
-  width: 25px;
+  width: 26px;
   height: 100%;
   background: #f59e0b; 
   transform: translateX(-50%);
@@ -217,7 +235,7 @@ body {
   left: 0;
   top: 50%;
   width: 100%;
-  height: 25px;
+  height: 26px;
   background: #f59e0b;
   transform: translateY(-50%);
   border-radius: 4px;
@@ -227,11 +245,11 @@ body {
   position: absolute;
   top: -15px;
   left: -10px;
-  width: 170px;
+  width: 180px;
   height: 35px;
   background: #be123c;
   border-radius: 8px;
-  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.15);
   z-index: 2;
   transition: transform 0.5s ease;
 }
@@ -239,7 +257,7 @@ body {
   content: '';
   position: absolute;
   left: 50%;
-  width: 25px;
+  width: 26px;
   height: 100%;
   background: #d97706;
   transform: translateX(-50%);
@@ -288,19 +306,19 @@ body {
 
 /* 👆 "TIKLAYIN" YÖNLENDİRME YAZISI */
 .click-prompt {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: #be123c;
-  background: rgba(254, 215, 170, 0.6);
-  padding: 8px 20px;
-  border-radius: 20px;
+  background: rgba(254, 215, 170, 0.75);
+  padding: 10px 24px;
+  border-radius: 30px;
   border: 2px dashed #e11d48;
   animation: pulseText 1.5s infinite;
   text-align: center;
   user-select: none;
 }
 @keyframes pulseText {
-  0%, 100% { opacity: 0.7; transform: scale(1); }
+  0%, 100% { opacity: 0.8; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.05); }
 }
 
@@ -308,28 +326,28 @@ body {
 #letter {
   display: none;
   width: 100%;
-  max-width: 360px;
+  max-width: 480px; /* Bilgisayarda daha okunaklı olması için genişlik artırıldı */
   background: white;
   border-radius: 24px;
-  padding: clamp(20px, 5vw, 30px);
-  box-shadow: 0 25px 50px rgba(69, 26, 3, 0.15);
+  padding: 40px;
+  box-shadow: 0 30px 60px rgba(69, 26, 3, 0.18);
   border: 1px solid var(--color-cream);
   max-height: 85vh;
   overflow-y: auto;
   animation: popLetter 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 #letter p {
-  font-size: clamp(0.85rem, 4vw, 0.98rem);
-  line-height: 1.6;
+  font-size: 1.05rem;
+  line-height: 1.7;
   color: var(--text-dark);
   text-align: justify;
 }
 #letter strong {
   display: block;
-  margin-top: 15px;
+  margin-top: 20px;
   text-align: right;
   color: var(--color-gold);
-  font-size: clamp(0.95rem, 4.5vw, 1.1rem);
+  font-size: 1.2rem;
 }
 @keyframes popLetter {
   from { transform: scale(0.5) translateY(50px); opacity: 0; }
@@ -346,11 +364,11 @@ body {
 .balloon {
   position: absolute;
   bottom: -150px;
-  width: clamp(55px, 15vw, 85px);
-  height: clamp(75px, 20vw, 105px);
+  width: clamp(55px, 6vw, 85px);
+  height: clamp(75px, 8vw, 110px);
   border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
   box-shadow: inset -8px -8px 15px rgba(0,0,0,0.15), 0 8px 20px rgba(0,0,0,0.1);
-  opacity: 0; /* Başlangıçta görünmezler */
+  opacity: 0;
   animation: floatUpAndAway var(--dur) ease-in-out forwards;
 }
 .balloon::after {
@@ -362,12 +380,11 @@ body {
   border-right: 5px solid transparent;
   border-bottom: 8px solid currentColor;
 }
-/* Balonların uçması ve 1sn sonra görünmesi için animasyon */
 @keyframes floatUpAndAway {
   0% { transform: translateY(0) scale(1) rotate(var(--rot)); opacity: 0; }
-  15% { opacity: 0.95; } /* 1 saniyelik gecikmeden sonra hızla görünür olurlar */
+  15% { opacity: 0.95; } 
   90% { opacity: 0.95; }
-  100% { transform: translateY(-130vh) scale(1.15) rotate(calc(var(--rot) * 2.5)); opacity: 0; }
+  100% { transform: translateY(-130vh) scale(1.1) rotate(calc(var(--rot) * 2)); opacity: 0; }
 }
 
 #confetti-container {
@@ -380,38 +397,30 @@ body {
 @keyframes fall {
   to { transform: translateY(110dvh) rotate(360deg); }
 }
-
-/* ── MOBİL UYUMU ── */
-@media (max-aspect-ratio: 1/1) {
-  #bg-image-container {
-    background-position: center bottom;
-  }
-  #candle-container {
-    top: 48.5%; 
-    left: 50%; 
-  }
-}
 </style>
 </head>
 <body>
 
 <!-- 1. SAYFA: PASTA EKRANI -->
 <div id="cake-page" onclick="triggerBlowSequence()">
-  <div id="bg-image-container"></div>
-  <div id="bg-overlay"></div>
-  
-  <!-- Pastanın Üzerine Ortalı Mum -->
-  <div id="candle-container">
-    <div id="flame" class="candle-flame"></div>
-    <div class="candle-wick"></div>
-    <div class="candle-body"></div>
-    <div id="smoke"></div>
-  </div>
+  <!-- Bilgisayar Çözünürlük Koruma Kutusu (16:9 Canvas) -->
+  <div class="canvas-container">
+    <div id="bg-image-container"></div>
+    <div id="bg-overlay"></div>
+    
+    <!-- Milim oynamayan pasta üstü mum -->
+    <div id="candle-container">
+      <div id="flame" class="candle-flame"></div>
+      <div class="candle-wick"></div>
+      <div class="candle-body"></div>
+      <div id="smoke"></div>
+    </div>
 
-  <div id="blow-tip">Mumu söndürmek için dokunun ve üfleyin! 🌬️</div>
+    <div id="blow-tip">Mumu söndürmek için dokunun ve üfleyin! 🌬️</div>
+  </div>
 </div>
 
-<!-- 2. SAYFA: HEDİYE EKRANI (Kutu ve Altında Tıklayın Yazısı) -->
+<!-- 2. SAYFA: HEDİYE EKRANI -->
 <div id="gift-page">
   <div id="gift-container">
     <div class="gift-box" onclick="openGift()">
@@ -438,23 +447,22 @@ const colors = ['#f97316', '#d97706', '#fed7aa', '#ffedd5', '#ca8a04', '#ea580c'
 const curtain = document.getElementById('balloon-curtain');
 let isBlown = false;
 
-// Sayfa yüklendikten 1 saniye sonra balonlar görünmeye ve uçmaya başlar
+// Sayfa yüklendikten 1 saniye sonra balonlar pürüzsüzce uçar
 window.addEventListener('DOMContentLoaded', () => {
-  for(let i=0; i<80; i++){
+  for(let i=0; i<85; i++){
     const b = document.createElement('div');
     b.className = 'balloon';
     b.style.left = Math.random() * 100 + '%';
     b.style.background = colors[Math.floor(Math.random() * colors.length)];
     b.style.color = b.style.background;
-    b.style.setProperty('--dur', (3.5 + Math.random() * 4.5) + 's');
-    b.style.setProperty('--rot', (Math.random() * 40 - 20) + 'deg');
-    // 1 saniyelik başlangıç gecikmesi (bekleme süresi)
-    b.style.animationDelay = (1 + Math.random() * 2) + 's';
+    b.style.setProperty('--dur', (4 + Math.random() * 5) + 's');
+    b.style.setProperty('--rot', (Math.random() * 30 - 15) + 'deg');
+    b.style.animationDelay = (1 + Math.random() * 2.5) + 's'; // 1sn kesin gecikme
     curtain.appendChild(b);
   }
 });
 
-// Üfleme İşlemini Başlat (Tıklayınca 2sn üfleme simülasyonu)
+// Üfleme İşlemi (2sn üfleme efekti)
 function triggerBlowSequence() {
   if (isBlown) return;
   isBlown = true;
@@ -469,7 +477,7 @@ function triggerBlowSequence() {
   }, 2000);
 }
 
-// Mumu Söndür, Ekranı Karart ve 1.5 Saniye Bekleterek Hediyeyi Getir
+// Ekranı Karart, 1.5sn Bekle ve Hediyeyi Getir
 function blowOut() {
   document.getElementById('flame').classList.add('out');
   document.getElementById('smoke').classList.add('active');
@@ -477,26 +485,25 @@ function blowOut() {
   
   createConfetti();
 
-  // Ekranı yavaşça tamamen karartıyoruz
+  // Ekranı karart
   setTimeout(() => {
     document.getElementById('cake-page').style.opacity = '0';
   }, 600);
 
-  // Pasta sayfasını kapatıp, tam 1.5 Saniye (1500ms) siyah ekranda bekledikten sonra hediye sayfasını açıyoruz
+  // Pasta sayfasını kaldırıp 1.5 saniye siyah ekranda bekletip hediyeyi açma
   setTimeout(() => {
     document.getElementById('cake-page').style.display = 'none';
     
     const giftPage = document.getElementById('gift-page');
     giftPage.style.display = 'flex';
     
-    // Hediye sayfasını yumuşak bir şekilde görünür yapıyoruz
     setTimeout(() => {
       giftPage.style.opacity = '1';
     }, 50);
-  }, 2100); // 600ms (kararma başlangıcı) + 1500ms (bekleme süresi) = 2100ms
+  }, 2100); // 600ms kararma geçişi + 1500ms tam karartma bekleyişi = 2100ms
 }
 
-// Hediyeyi Aç ve Mesajı (Mektubu) Göster
+// Hediyeyi Aç ve Mektubu Göster
 function openGift() {
   const gift = document.querySelector('.gift-box');
   const container = document.getElementById('gift-container');
@@ -504,7 +511,6 @@ function openGift() {
   gift.classList.add('open');
   createConfetti();
   
-  // Kutu açılma animasyonu bittikten sonra mektup gelir
   setTimeout(() => {
     container.style.display = 'none';
     document.getElementById('letter').style.display = 'block';
