@@ -20,7 +20,7 @@ html,body{
   width:100%;
   height:100%;
   overflow:hidden;
-  background-color: #150901; /* Arka plan boşlukları için koyu şık ton */
+  background-color: #150901; /* Boşluklarda arka planın sırıtmaması için koyu tema */
 }
 body {
   font-family:'Poppins',sans-serif;
@@ -30,7 +30,7 @@ body {
   perspective: 1000px;
 }
 
-/* ── 1. SAYFA: DOĞUM GÜNÜ & PASTA SAHNESİ (BİLGİSAYAR ODAKLI) ── */
+/* ── 1. SAYFA: DOĞUM GÜNÜ & PASTA SAHNESİ ── */
 #cake-page {
   position: fixed;
   inset: 0;
@@ -42,12 +42,11 @@ body {
   transition: opacity 1s ease;
 }
 
-/* 🖥️ KUSURSUZLUK KUTUSU: Resmin oranını (16:9) korur, mumun kaymasını tamamen engeller */
+/* 🖥️ KUSURSUZLUK KUTUSU (Görselin orijinal 1920x1016 oranına kilitlendi) */
 .canvas-container {
   position: relative;
+  aspect-ratio: 1920 / 1016;
   width: 100vw;
-  height: 56.25vw; /* 16:9 En-Boy Oranı */
-  max-width: 177.78vh; /* Ekran yüksekliğine göre taşmayı önler */
   max-height: 100vh;
   box-shadow: 0 0 100px rgba(0,0,0,0.8);
   overflow: hidden;
@@ -61,7 +60,7 @@ body {
   position: absolute;
   inset: 0;
   background-image: url('arka-plan.jpeg');
-  background-size: 100% 100%; /* Resmi tam oturtarak kaymayı sıfırlar */
+  background-size: 100% 100%; /* Resmi esnetmeden tam kaplar */
   background-position: center;
   background-repeat: no-repeat;
   z-index: 1;
@@ -70,15 +69,15 @@ body {
 #bg-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.25);
   z-index: 2;
 }
 
-/* 📍 PASTA ÜSTÜNE TAM SABİTLENMİŞ MUM (Görsel oranına göre kilitlendi) */
+/* 📍 PASTA ÜZERİNE TAM SABİTLENMİŞ MUM (Hassas Koordinat Kilidi) */
 #candle-container {
   position: absolute;
-  top: 51.5%; 
-  left: 45.8%; 
+  top: 42.3%;  /* Pastanın en üst tepe noktasının dikey koordinatı */
+  left: 49.3%; /* Yatayda tam ortası */
   transform: translate(-50%, -100%);
   z-index: 5;
   display: flex;
@@ -88,36 +87,36 @@ body {
 
 /* Mum Gövdesi */
 .candle-body {
-  width: clamp(6px, 0.6vw, 10px);
-  height: clamp(30px, 3.2vw, 50px);
+  width: clamp(5px, 0.5vw, 8px);
+  height: clamp(25px, 2.5vw, 40px);
   background: linear-gradient(to right, #ffffff, #fef08a, #f59e0b);
-  border-radius: 3px;
+  border-radius: 2px;
   position: relative;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.4);
 }
 
 /* Mum Fitili */
 .candle-wick {
-  width: 2px;
-  height: clamp(6px, 0.6vw, 10px);
+  width: 1.5px;
+  height: clamp(5px, 0.5vw, 8px);
   background-color: #111827;
   position: absolute;
-  top: calc(clamp(6px, 0.6vw, 10px) * -1);
+  top: calc(clamp(5px, 0.5vw, 8px) * -1);
   left: 50%;
   transform: translateX(-50%);
 }
 
 /* Yanıp Sönen Doğal Alev */
 .candle-flame {
-  width: clamp(9px, 0.9vw, 14px);
-  height: clamp(20px, 2vw, 30px);
+  width: clamp(8px, 0.8vw, 12px);
+  height: clamp(18px, 1.8vw, 26px);
   background: radial-gradient(ellipse at bottom, #ffffff 15%, #fef08a 40%, #f97316 70%, #dc2626 100%);
   border-radius: 50% 50% 20% 20% / 60% 60% 40% 40%;
   position: absolute;
-  top: calc((clamp(20px, 2vw, 30px) + clamp(6px, 0.6vw, 10px)) * -1.05);
+  top: calc((clamp(18px, 1.8vw, 26px) + clamp(5px, 0.5vw, 8px)) * -1.05);
   left: 50%;
   transform: translateX(-50%);
-  box-shadow: 0 0 20px #f59e0b, 0 0 40px #ef4444;
+  box-shadow: 0 0 15px #f59e0b, 0 0 30px #ef4444;
   transform-origin: center bottom;
   animation: flicker 1.2s infinite alternate ease-in-out;
 }
@@ -159,7 +158,7 @@ body {
 #blow-tip {
   position: absolute;
   bottom: 8%;
-  font-size: clamp(0.85rem, 1.2vw, 1.1rem);
+  font-size: clamp(0.85rem, 1.1vw, 1.05rem);
   font-weight: 700;
   color: #fff;
   background: linear-gradient(135deg, var(--color-orange), var(--color-gold));
@@ -193,7 +192,6 @@ body {
   transition: opacity 0.8s ease;
 }
 
-/* Hediye Kutusu ve Yazıyı Kapsayan Alan */
 #gift-container {
   display: flex;
   flex-direction: column;
@@ -326,7 +324,7 @@ body {
 #letter {
   display: none;
   width: 100%;
-  max-width: 480px; /* Bilgisayarda daha okunaklı olması için genişlik artırıldı */
+  max-width: 480px; 
   background: white;
   border-radius: 24px;
   padding: 40px;
@@ -403,12 +401,12 @@ body {
 
 <!-- 1. SAYFA: PASTA EKRANI -->
 <div id="cake-page" onclick="triggerBlowSequence()">
-  <!-- Bilgisayar Çözünürlük Koruma Kutusu (16:9 Canvas) -->
+  <!-- Bilgisayar Çözünürlük Koruma Kutusu (Orijinal 1920x1016 Oranı) -->
   <div class="canvas-container">
     <div id="bg-image-container"></div>
     <div id="bg-overlay"></div>
     
-    <!-- Milim oynamayan pasta üstü mum -->
+    <!-- Milim Oynamayan Pasta Üstü Mum -->
     <div id="candle-container">
       <div id="flame" class="candle-flame"></div>
       <div class="candle-wick"></div>
@@ -457,7 +455,7 @@ window.addEventListener('DOMContentLoaded', () => {
     b.style.color = b.style.background;
     b.style.setProperty('--dur', (4 + Math.random() * 5) + 's');
     b.style.setProperty('--rot', (Math.random() * 30 - 15) + 'deg');
-    b.style.animationDelay = (1 + Math.random() * 2.5) + 's'; // 1sn kesin gecikme
+    b.style.animationDelay = (1 + Math.random() * 2.5) + 's'; /* 1sn kesin gecikme */
     curtain.appendChild(b);
   }
 });
@@ -500,7 +498,7 @@ function blowOut() {
     setTimeout(() => {
       giftPage.style.opacity = '1';
     }, 50);
-  }, 2100); // 600ms kararma geçişi + 1500ms tam karartma bekleyişi = 2100ms
+  }, 2100); /* 600ms kararma + 1500ms tam karartma bekleyişi = 2100ms */
 }
 
 // Hediyeyi Aç ve Mektubu Göster
