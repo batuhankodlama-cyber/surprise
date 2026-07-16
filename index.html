@@ -27,13 +27,13 @@ body{
   perspective: 1000px;
 }
 
-/* ── ARKA PLAN GÖRSELİ (İlk Aşama) ── */
+/* ── ARKA PLAN GÖRSELİ (JPEG uzantılı) ── */
 #bg-image-container {
   position: fixed;
   inset: 0;
-  background-image: url('https://i.ibb.co/3ykbYfL/1000069439.png');
+  background-image: url('arka-plan.jpeg');
   background-size: cover;
-  background-position: center;
+  background-position: center bottom;
   z-index: 1;
   transition: opacity 1s ease;
 }
@@ -41,12 +41,12 @@ body{
 #bg-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.3);
   z-index: 2;
   transition: opacity 1s ease;
 }
 
-/* ── YOĞUN BALONLAR (Tüm ekranı kaplayan) ── */
+/* ── YOĞUN BALONLAR ── */
 #balloon-curtain {
   position: fixed;
   inset: 0;
@@ -56,8 +56,8 @@ body{
 .balloon {
   position: absolute;
   bottom: -150px;
-  width: clamp(65px, 16vw, 95px);
-  height: clamp(85px, 21vw, 115px);
+  width: clamp(55px, 15vw, 85px);
+  height: clamp(75px, 20vw, 105px);
   border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
   box-shadow: inset -8px -8px 15px rgba(0,0,0,0.15), 0 8px 20px rgba(0,0,0,0.1);
   animation: floatUpAndAway var(--dur) ease-in-out forwards;
@@ -86,11 +86,11 @@ body{
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  padding-bottom: clamp(40px, 8vh, 80px);
+  padding-bottom: clamp(30px, 12vh, 80px);
   z-index: 10;
 }
 
-/* İnteraktif Tıklama Alanı (Görseldeki mumu söndürmek için) */
+/* İnteraktif Tıklama Alanı */
 #interact-zone {
   position: absolute;
   inset: 0;
@@ -101,7 +101,7 @@ body{
 /* Bilgilendirme Yazısı */
 #blow-tip {
   position: relative;
-  font-size: clamp(0.9rem, 3vw, 1.1rem);
+  font-size: clamp(0.85rem, 3.5vw, 1.1rem);
   font-weight: 700;
   color: #fff;
   background: linear-gradient(135deg, var(--color-orange), var(--color-gold));
@@ -112,11 +112,12 @@ body{
   transition: all 0.5s ease;
   z-index: 15;
   border: 2px solid #fff;
+  max-width: 90%;
   animation: pulseButton 1.5s ease-in-out infinite;
 }
 @keyframes pulseButton {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  50% { transform: scale(1.03); }
 }
 
 /* ── HEDİYE KUTUSU EKRANI ── */
@@ -128,16 +129,17 @@ body{
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 25px;
+  gap: 20px;
   background: linear-gradient(135deg, #fff7ed, #ffedd5, #fef3c7);
   animation: fadeIn 0.8s ease forwards;
-  padding: 15px;
+  padding: 20px;
 }
 
-/* Gönderdiğin Hediye Görseli Kartı */
+/* Hediye görseli kartı (JPEG uzantılı) */
 .gift-image-card {
   position: relative;
-  width: min(380px, 90vw);
+  width: 100%;
+  max-width: 360px;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 15px 35px rgba(69, 26, 3, 0.2);
@@ -148,48 +150,51 @@ body{
 }
 .gift-image-card img {
   width: 100%;
+  height: auto;
   display: block;
-  transition: filter 0.3s ease;
 }
 .gift-image-card:hover {
-  transform: scale(1.04) translateY(-5px);
+  transform: scale(1.02) translateY(-5px);
   box-shadow: 0 20px 45px rgba(217, 119, 6, 0.35);
 }
 @keyframes floatCard {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  50% { transform: translateY(-6px); }
 }
 
 /* Mektup */
 #letter {
   display: none;
-  width: min(390px, 92vw);
+  width: 100%;
+  max-width: 360px;
   background: white;
   border-radius: 24px;
-  padding: 30px 25px;
+  padding: clamp(20px, 5vw, 30px);
   box-shadow: 0 25px 50px rgba(69, 26, 3, 0.15);
   border: 1px solid var(--color-cream);
+  max-height: 85vh;
+  overflow-y: auto;
   animation: popLetter 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 #letter p {
-  font-size: 0.98rem;
-  line-height: 1.65;
+  font-size: clamp(0.85rem, 4vw, 0.98rem);
+  line-height: 1.6;
   color: var(--text-dark);
   text-align: justify;
 }
 #letter strong {
   display: block;
-  margin-top: 20px;
+  margin-top: 15px;
   text-align: right;
   color: var(--color-gold);
-  font-size: 1.1rem;
+  font-size: clamp(0.95rem, 4.5vw, 1.1rem);
 }
 @keyframes popLetter {
   from { transform: scale(0.8) translateY(30px); opacity: 0; }
   to { transform: scale(1) translateY(0); opacity: 1; }
 }
 
-/* Konfeti Efektleri */
+/* Konfeti */
 #confetti-container {
   position: fixed; inset: 0; pointer-events: none; z-index: 99;
 }
@@ -201,28 +206,34 @@ body{
   to { transform: translateY(110dvh) rotate(360deg); }
 }
 
+/* Telefon dikey/yatay ekran uyumu */
+@media (max-aspect-ratio: 1/1) {
+  #bg-image-container {
+    background-position: 42% bottom;
+  }
+}
+
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 </style>
 </head>
 <body>
 
-<!-- Arka Plan Resmi Olarak İlk Görsel -->
 <div id="bg-image-container"></div>
 <div id="bg-overlay"></div>
 
 <div id="balloon-curtain"></div>
 <div id="confetti-container"></div>
 
-<!-- İnteraktif Alan (Mumu Söndürmek İçin) -->
+<!-- İnteraktif Alan -->
 <div id="interact-zone" onclick="blowOut()"></div>
 
 <main id="stage">
   <div id="blow-tip">💨 Mumu söndürmek için ekrana dokunun!</div>
 
   <div id="gift-screen">
-    <!-- Gönderdiğin İkinci Görsel (Hediye Kutuları ve Cupcake) -->
+    <!-- Kendi yüklediğin JPEG görselini okuyor -->
     <div class="gift-image-card" onclick="openGift()">
-      <img src="https://i.ibb.co/1000069440/1000069440.png" alt="Hediye Kutuları" id="gift-box-img">
+      <img src="hediyeler.jpeg" alt="Hediye Kutuları" id="gift-box-img">
     </div>
     
     <div id="letter">
@@ -236,11 +247,9 @@ body{
 </main>
 
 <script>
-// Balon Renkleri (Görseldeki turuncu, krem, şeftali, şampanya tonları)
 const colors = ['#f97316', '#d97706', '#fed7aa', '#ffedd5', '#ca8a04', '#ea580c', '#fef3c7'];
 const curtain = document.getElementById('balloon-curtain');
 
-// Balon yoğunluğu artırıldı
 for(let i=0; i<80; i++){
   const b = document.createElement('div');
   b.className = 'balloon';
@@ -253,15 +262,10 @@ for(let i=0; i<80; i++){
   curtain.appendChild(b);
 }
 
-// Mum Söndürme / Geçiş Aşaması
 function blowOut() {
   document.getElementById('blow-tip').style.opacity = '0';
   document.getElementById('interact-zone').style.pointerEvents = 'none';
-  
-  // Konfeti fırlat
   createConfetti();
-
-  // Ekranı karartarak pürüzsüz geçiş yap
   document.getElementById('bg-image-container').style.opacity = '0';
   document.getElementById('bg-overlay').style.opacity = '0';
 
@@ -271,14 +275,12 @@ function blowOut() {
   }, 1200);
 }
 
-// Hediye Kutusunu Açma
 function openGift() {
   document.querySelector('.gift-image-card').style.display = 'none';
   document.getElementById('letter').style.display = 'block';
   createConfetti();
 }
 
-// Konfeti fırlatma motoru
 function createConfetti() {
   const container = document.getElementById('confetti-container');
   for(let i=0; i<120; i++) {
