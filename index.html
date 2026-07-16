@@ -24,39 +24,48 @@ body {
   align-items:center;
   justify-content:center;
   perspective: 1000px;
-  cursor: pointer;
 }
 
-/* ── ARKA PLAN GÖRSELİ ── */
-#bg-image-container {
+/* ── 1. SAYFA: DOĞUM GÜNÜ & PASTA SAYFASI ── */
+#cake-page {
   position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: clamp(30px, 11vh, 70px);
+  cursor: pointer;
+  transition: opacity 0.8s ease;
+}
+
+#bg-image-container {
+  position: absolute;
   inset: 0;
   background-image: url('arka-plan.jpeg');
   background-size: cover;
-  background-position: center bottom;
+  background-position: center center;
   z-index: 1;
-  transition: opacity 1s ease;
 }
 
 #bg-overlay {
-  position: fixed;
+  position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.25);
   z-index: 2;
-  transition: opacity 1s ease;
 }
 
-/* ── TAM ORTALANMIŞ VE PASTAYA OTURAN MUM ── */
+/* Her Ekranda Tam Ortalanan Mum */
 #candle-container {
   position: absolute;
-  top: 41%; /* Dikeyde pastanın en üst katının hizası */
-  left: 50%; /* Tam yatay merkez */
+  top: 41.5%;
+  left: 58.5%;
   transform: translate(-50%, -100%);
   z-index: 5;
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: opacity 0.5s ease;
 }
 
 /* Mum Gövdesi */
@@ -95,7 +104,7 @@ body {
   animation: flicker 1.2s infinite alternate ease-in-out;
 }
 
-/* Sönme Durumu */
+/* Sönme Animasyonu */
 .candle-flame.out {
   animation: none !important;
   opacity: 0;
@@ -103,7 +112,7 @@ body {
   transition: all 0.4s ease;
 }
 
-/* Söndükten Sonra Çıkacak Gerçekçi Duman */
+/* Duman */
 #smoke {
   position: absolute;
   top: -45px;
@@ -128,50 +137,6 @@ body {
   100% { transform: translateX(-50%) rotate(-1deg) scaleY(0.95) scaleX(1.05); }
 }
 
-/* ── YOĞUN BALONLAR ── */
-#balloon-curtain {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  pointer-events: none;
-}
-.balloon {
-  position: absolute;
-  bottom: -150px;
-  width: clamp(55px, 15vw, 85px);
-  height: clamp(75px, 20vw, 105px);
-  border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
-  box-shadow: inset -8px -8px 15px rgba(0,0,0,0.15), 0 8px 20px rgba(0,0,0,0.1);
-  animation: floatUpAndAway var(--dur) ease-in-out forwards;
-}
-.balloon::after {
-  content: "";
-  position: absolute;
-  bottom: -8px; left: 50%;
-  transform: translateX(-50%);
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-bottom: 8px solid currentColor;
-}
-@keyframes floatUpAndAway {
-  0% { transform: translateY(0) scale(1) rotate(var(--rot)); opacity: 1; }
-  90% { opacity: 0.95; }
-  100% { transform: translateY(-130vh) scale(1.15) rotate(calc(var(--rot) * 2.5)); opacity: 0; }
-}
-
-/* ── SAHNE DÜZENİ ── */
-#stage {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  padding-bottom: clamp(30px, 11vh, 70px);
-  z-index: 10;
-}
-
 /* Bilgilendirme Butonu */
 #blow-tip {
   position: relative;
@@ -194,19 +159,19 @@ body {
   50% { transform: scale(1.03); }
 }
 
-/* ── HEDİYE EKRANI (Sorunsuz çalışması için dışarı taşındı) ── */
-#gift-screen {
-  display: none;
+/* ── 2. SAYFA: HEDİYE & MEKTUP SAYFASI (Tamamen İzole Edildi) ── */
+#gift-page {
+  display: none; /* Başlangıçta tamamen kapalı */
   position: fixed;
   inset: 0;
-  z-index: 120; /* Sahne kapandığında en üstte görünmesi için yükseltildi */
+  z-index: 100;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 20px;
   background: linear-gradient(135deg, #fff7ed, #ffedd5, #fef3c7);
-  animation: fadeIn 0.8s ease forwards;
   padding: 20px;
+  animation: fadeIn 0.8s ease forwards;
 }
 
 .gift-image-card {
@@ -235,7 +200,7 @@ body {
   50% { transform: translateY(-6px); }
 }
 
-/* Mektup Tasarımı */
+/* Mektup Kartı */
 #letter {
   display: none;
   width: 100%;
@@ -267,9 +232,39 @@ body {
   to { transform: scale(1) translateY(0); opacity: 1; }
 }
 
-/* Konfeti */
+/* ── BALONLAR & KONFETİLER ── */
+#balloon-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+}
+.balloon {
+  position: absolute;
+  bottom: -150px;
+  width: clamp(55px, 15vw, 85px);
+  height: clamp(75px, 20vw, 105px);
+  border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+  box-shadow: inset -8px -8px 15px rgba(0,0,0,0.15), 0 8px 20px rgba(0,0,0,0.1);
+  animation: floatUpAndAway var(--dur) ease-in-out forwards;
+}
+.balloon::after {
+  content: "";
+  position: absolute;
+  bottom: -8px; left: 50%;
+  transform: translateX(-50%);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 8px solid currentColor;
+}
+@keyframes floatUpAndAway {
+  0% { transform: translateY(0) scale(1) rotate(var(--rot)); opacity: 1; }
+  90% { opacity: 0.95; }
+  100% { transform: translateY(-130vh) scale(1.15) rotate(calc(var(--rot) * 2.5)); opacity: 0; }
+}
+
 #confetti-container {
-  position: fixed; inset: 0; pointer-events: none; z-index: 99;
+  position: fixed; inset: 0; pointer-events: none; z-index: 150;
 }
 .confetti {
   position: absolute; width: 8px; height: 8px;
@@ -279,7 +274,7 @@ body {
   to { transform: translateY(110dvh) rotate(360deg); }
 }
 
-/* Telefon dikey/yatay ekran uyumu */
+/* ── MOBİL (PORTRAIT) UYUMU ── */
 @media (max-aspect-ratio: 1/1) {
   #bg-image-container {
     background-position: center bottom;
@@ -293,31 +288,28 @@ body {
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 </style>
 </head>
-<body onclick="triggerBlowSequence()">
+<body>
 
-<div id="bg-image-container"></div>
-<div id="bg-overlay"></div>
+<!-- 1. SAYFA: PASTA EKRANI -->
+<div id="cake-page" onclick="triggerBlowSequence()">
+  <div id="bg-image-container"></div>
+  <div id="bg-overlay"></div>
+  
+  <!-- Hassas Konumlandırılmış Mum -->
+  <div id="candle-container">
+    <div id="flame" class="candle-flame"></div>
+    <div class="candle-wick"></div>
+    <div class="candle-body"></div>
+    <div id="smoke"></div>
+  </div>
 
-<!-- Tam Ortalanmış Mum -->
-<div id="candle-container">
-  <div id="flame" class="candle-flame"></div>
-  <div class="candle-wick"></div>
-  <div class="candle-body"></div>
-  <div id="smoke"></div>
+  <div id="blow-tip">Mumu söndürmek için dokunun ve üfleyin! 🌬️</div>
 </div>
 
-<div id="balloon-curtain"></div>
-<div id="confetti-container"></div>
-
-<!-- Ana Söndürme Sahnesi -->
-<main id="stage">
-  <div id="blow-tip">Mumu söndürmek için dokunun ve üfleyin! 🌬️</div>
-</main>
-
-<!-- Hediye ve Mektup Ekranı (Sahne Dışında Sona Alındı) -->
-<div id="gift-screen">
-  <div class="gift-image-card" onclick="openGift(event)">
-    <img src="hediyeler.jpeg" alt="Hediye Kutuları" id="gift-box-img">
+<!-- 2. SAYFA: HEDİYE EKRANI (Ayrı Bir Blok Olarak Tasarlandı) -->
+<div id="gift-page">
+  <div class="gift-image-card" onclick="openGift()">
+    <img src="hediyeler.jpeg" alt="Hediye Kutusu" id="gift-box-img">
   </div>
   
   <div id="letter">
@@ -329,12 +321,15 @@ body {
   </div>
 </div>
 
+<div id="balloon-curtain"></div>
+<div id="confetti-container"></div>
+
 <script>
 const colors = ['#f97316', '#d97706', '#fed7aa', '#ffedd5', '#ca8a04', '#ea580c', '#fef3c7'];
 const curtain = document.getElementById('balloon-curtain');
 let isBlown = false;
 
-// Balonlar
+// Balon Uçurma Efekti
 for(let i=0; i<80; i++){
   const b = document.createElement('div');
   b.className = 'balloon';
@@ -347,24 +342,22 @@ for(let i=0; i<80; i++){
   curtain.appendChild(b);
 }
 
-// Tıklama ve Gecikme Mekanizması
+// Üfleme Zincirini Başlatma (2 Saniye Gecikmeli)
 function triggerBlowSequence() {
   if (isBlown) return;
   isBlown = true;
 
   const tip = document.getElementById('blow-tip');
-  
   tip.innerHTML = "Üfleniyor... 🌬️💨";
   tip.style.background = "linear-gradient(135deg, #0284c7, #0369a1)"; 
   tip.style.animation = "none";
 
-  // Tam 2 saniye bekletiyoruz
   setTimeout(() => {
     blowOut();
   }, 2000);
 }
 
-// Mumun Sönmesi ve Geçiş
+// Mumu Söndür ve Sayfaları Değiştir
 function blowOut() {
   document.getElementById('flame').classList.add('out');
   document.getElementById('smoke').classList.add('active');
@@ -372,28 +365,26 @@ function blowOut() {
   
   createConfetti();
 
-  // Arka planı ve mumu karart
+  // 1. Ekranı yavaşça karartıyoruz
   setTimeout(() => {
-    document.getElementById('bg-image-container').style.opacity = '0';
-    document.getElementById('bg-overlay').style.opacity = '0';
-    document.getElementById('candle-container').style.opacity = '0';
+    document.getElementById('cake-page').style.opacity = '0';
   }, 600);
 
-  // Hediye paketini göster
+  // 2. Pasta sayfasını tamamen yok edip, hediye sayfasını açıyoruz
   setTimeout(() => {
-    document.getElementById('stage').style.display = 'none';
-    document.getElementById('gift-screen').style.display = 'flex';
-  }, 1500);
+    document.getElementById('cake-page').style.display = 'none';
+    document.getElementById('gift-page').style.display = 'flex';
+  }, 1400);
 }
 
-// Hediye paketine tıklanınca mektubu açma
-function openGift(event) {
-  event.stopPropagation(); // Sayfa genelindeki tıklama dinleyicisinin mektubu kapatmasını önler
+// Hediyeyi Aç ve Mektubu Göster
+function openGift() {
   document.querySelector('.gift-image-card').style.display = 'none';
   document.getElementById('letter').style.display = 'block';
   createConfetti();
 }
 
+// Konfeti Yağmuru
 function createConfetti() {
   const container = document.getElementById('confetti-container');
   for(let i=0; i<120; i++) {
