@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Happy Birthday! 🎁</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --pink-light:#fdf2f8;
+  --pink-dark:#be185d;
+  --gold:#eab308;
+  --text-dark:#4c0519;
+}
+html,body{width:100%;height:100%;overflow:hidden;}
+body{
+  font-family:'Poppins',sans-serif;
+  background: linear-gradient(135deg, #fdf2f8, #fce7f3, #fae8ff);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  perspective: 1000px;
+}
+
+/* ── BALONLAR (İlk ekranı kaplayanlar) ── */
+#balloon-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+}
+.balloon {
+  position: absolute;
+  bottom: -150px;
+  width: clamp(60px, 15vw, 90px);
+  height: clamp(80px, 20vw, 110px);
+  border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+  animation: floatUpAndAway var(--dur) ease-in-out forwards;
+}
+.balloon::after {
+  content: "";
+  position: absolute;
+  bottom: -8px; left: 50%;
+  transform: translateX(-50%);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 8px solid currentColor;
+}
+@keyframes floatUpAndAway {
+  0% { transform: translateY(0) scale(1) rotate(var(--rot)); opacity: 1; }
+  90% { opacity: 0.9; }
+  100% { transform: translateY(-120vh) scale(1.1) rotate(calc(var(--rot) * 2)); opacity: 0; }
+}
+
+/* ── SAHNE DÜZENİ ── */
+#stage {
+  position: relative;
+  width: min(420px, 92vw);
+  height: 85dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 10px;
+  z-index: 10;
+}
+
+/* Duvar Yazısı */
+#wall-text {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 8vw, 3rem);
+  color: var(--pink-dark);
+  text-align: center;
+  text-shadow: 2px 4px 10px rgba(190, 24, 93, 0.2);
+  animation: pulseText 2s ease-in-out infinite;
+}
+@keyframes pulseText {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Doğum Günü Masası ve Örtüsü */
+#party-table {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+.table-surface {
+  position: absolute;
+  bottom: 0; width: 100%; height: 75px;
+  background: repeating-linear-gradient(45deg, #f472b6, #f472b6 15px, #fbcfe8 15px, #fbcfe8 30px);
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  border-bottom: 10px solid #db2777;
+}
+
+/* İnteraktif Pasta */
+.cake {
+  position: relative;
+  z-index: 5;
+  width: 150px;
+  height: 100px;
+  background: #fbcfe8;
+  border-radius: 20px 20px 4px 4px;
+  box-shadow: inset 0 12px 0 #f472b6, 0 10px 20px rgba(0,0,0,0.08);
+  bottom: 25px;
+  cursor: pointer;
+}
+.cake-cream {
+  position: absolute;
+  top: 10px; left: 0; width: 100%; height: 15px;
+  background: #ffffff;
+  border-radius: 0 0 10px 10px;
+}
+.candle {
+  position: absolute;
+  top: -30px; left: 50%;
+  transform: translateX(-50%);
+  width: 12px; height: 35px;
+  background: linear-gradient(to right, #60a5fa, #3b82f6);
+  border-radius: 3px;
+}
+.flame {
+  position: absolute;
+  top: -18px; left: 50%;
+  transform: translateX(-50%);
+  width: 14px; height: 22px;
+  background: radial-gradient(circle at bottom, #fef08a, #f97316);
+  border-radius: 50% 50% 20% 20%;
+  animation: flicker 0.15s ease-in-out infinite alternate;
+}
+@keyframes flicker {
+  0% { transform: translateX(-50%) scale(1) rotate(-1deg); }
+  100% { transform: translateX(-50%) scale(1.1) rotate(1deg); }
+}
+
+/* Bilgilendirme Yazısı */
+#blow-tip {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  background: rgba(255, 255, 255, 0.7);
+  padding: 8px 16px;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  text-align: center;
+  transition: opacity 0.5s ease;
+  z-index: 15;
+}
+
+/* ── HEDİYE KUTUSU EKRANI ── */
+#gift-screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  animation: fadeIn 0.8s ease forwards;
+}
+.gift-box {
+  position: relative;
+  width: 140px; height: 110px;
+  background: linear-gradient(135deg, #ec4899, #be185d);
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(190, 24, 93, 0.25);
+  cursor: pointer;
+  animation: bounce 2s ease infinite;
+}
+.gift-box::before {
+  content: ""; position: absolute; left: 50%; top: 0; width: 16px; height: 100%;
+  transform: translateX(-50%); background: #ffd66b;
+}
+.gift-box::after {
+  content: ""; position: absolute; left: -6px; right: -6px; top: -18px; height: 24px;
+  border-radius: 8px; background: #ffd66b;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Mektup */
+#letter {
+  display: none;
+  width: min(390px, 94vw);
+  background: white;
+  border-radius: 24px;
+  padding: 25px;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+  border: 1px solid #fce7f3;
+  animation: popLetter 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+#letter p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #511035;
+  text-align: justify;
+}
+#letter strong {
+  display: block;
+  margin-top: 15px;
+  text-align: right;
+  color: var(--pink-dark);
+}
+@keyframes popLetter {
+  from { transform: scale(0.8) translateY(30px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* Konfeti Efektleri */
+#confetti-container {
+  position: fixed; inset: 0; pointer-events: none; z-index: 99;
+}
+.confetti {
+  position: absolute; width: 8px; height: 8px;
+  animation: fall var(--fall-dur) linear forwards;
+}
+@keyframes fall {
+  to { transform: translateY(110dvh) rotate(360deg); }
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+</style>
+</head>
+<body>
+
+<div id="balloon-curtain"></div>
+<div id="confetti-container"></div>
+
+<main id="stage">
+  <h1 id="wall-text">Happy Birthday!</h1>
+
+  <div id="party-table">
+    <div class="table-surface"></div>
+    <div class="cake" onclick="blowOut()">
+      <div class="cake-cream"></div>
+      <div class="candle">
+        <div class="flame" id="candle-flame"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="blow-tip">💨 Ekrana dokunarak mumu söndürün!</div>
+
+  <div id="gift-screen">
+    <div class="gift-box" onclick="openGift()"></div>
+    <div id="letter">
+      <p>
+        On this very special day, I want to thank you for your endless support, kindness, and dedication. Thank you for always believing in us and encouraging us to do our best.<br><br>
+        May this new year of your life bring you abundant health, endless happiness, and peace. May all your dreams come true.
+        <strong>Happy Birthday! 🎂✨</strong>
+      </p>
+    </div>
+  </div>
+</main>
+
+<script>
+// Balon Renkleri ve Kurulumu
+const colors = ['#f43f5e', '#ec4899', '#d946ef', '#a855f7', '#3b82f6', '#10b981', '#f59e0b'];
+const curtain = document.getElementById('balloon-curtain');
+
+for(let i=0; i<35; i++){
+  const b = document.createElement('div');
+  b.className = 'balloon';
+  b.style.left = Math.random() * 100 + '%';
+  b.style.background = colors[Math.floor(Math.random() * colors.length)];
+  b.style.color = b.style.background;
+  b.style.setProperty('--dur', (4 + Math.random() * 4) + 's');
+  b.style.setProperty('--rot', (Math.random() * 30 - 15) + 'deg');
+  b.style.animationDelay = (Math.random() * 1.5) + 's';
+  curtain.appendChild(b);
+}
+
+// Mum Söndürme Fonksiyonu
+function blowOut() {
+  const flame = document.getElementById('candle-flame');
+  if(!flame) return;
+  
+  flame.style.display = 'none'; // Mumu söndür
+  document.getElementById('blow-tip').style.opacity = '0';
+  
+  // Konfeti fırlat
+  createConfetti();
+
+  // 1 Saniye sonra hediye ekranına geçiş yap
+  setTimeout(() => {
+    document.getElementById('party-table').style.display = 'none';
+    document.getElementById('wall-text').style.display = 'none';
+    document.getElementById('blow-tip').style.display = 'none';
+    document.getElementById('gift-screen').style.display = 'flex';
+  }, 1200);
+}
+
+// Hediye Kutusunu Açma
+function openGift() {
+  document.querySelector('.gift-box').style.display = 'none';
+  document.getElementById('letter').style.display = 'block';
+  createConfetti();
+}
+
+// Konfeti Efekti
+function createConfetti() {
+  const container = document.getElementById('confetti-container');
+  for(let i=0; i<100; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.top = '-10px';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.setProperty('--fall-dur', (2 + Math.random() * 3) + 's');
+    c.style.transform = `scale(${Math.random() * 0.8 + 0.5})`;
+    container.appendChild(c);
+    setTimeout(() => c.remove(), 4000);
+  }
+}
+</script>
+</body>
+</html>
