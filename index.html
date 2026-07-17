@@ -4,68 +4,88 @@
     <meta charset="UTF-8">
     <title>Happy Birthday! 🎁</title>
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: sans-serif; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: sans-serif; }
 
         /* PASTA SAHNESİ */
         #sahne {
             position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-image: url('yanik.jpeg'); /* Uzantı .jpeg yapıldı */
+            background-image: url('yanik.jpeg');
             background-size: cover; background-position: center;
             display: flex; justify-content: center; align-items: flex-end;
-            transition: opacity 1s ease;
+            transition: background-image 0.5s ease;
         }
-
-        .btn { padding: 20px 40px; margin-bottom: 50px; cursor: pointer; background: #f59e0b; color: white; border: none; border-radius: 50px; font-size: 20px; }
+        .btn { padding: 20px 40px; margin-bottom: 50px; cursor: pointer; background: #f59e0b; color: white; border: none; border-radius: 50px; font-size: 20px; font-weight: bold; }
 
         /* HEDİYE SAHNESİ */
         #hediye-alani {
-            display: none; width: 100vw; height: 100vh; background: #fff7ed;
+            display: none; width: 100vw; height: 100vh; background: #f0f0f0;
             flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 2s ease; /* Yavaşça açılma burada */
         }
         
-        /* Hediye kutusu için artık hediyeler.jpeg dosyanı kullanıyoruz */
+        /* Balonlar için basit bir stil */
+        .balonlar { font-size: 50px; margin-bottom: 20px; }
+
         .kutu { 
-            width: 200px; height: 200px; 
+            width: 350px; height: 200px; 
             background-image: url('hediyeler.jpeg'); 
             background-size: contain; background-repeat: no-repeat;
-            cursor: pointer; 
+            cursor: pointer; margin-bottom: 20px;
         }
 
-        #mektup { display: none; padding: 40px; text-align: center; color: #451a03; max-width: 600px; }
+        #mektup { 
+            display: none; padding: 40px; text-align: center; color: #451a03; 
+            max-width: 600px; background: #eef2f5; border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
 
     <div id="sahne">
-        <button class="btn" onclick="mumuSondur()">Mumu Üfle!</button>
+        <button class="btn" onclick="mumuSondur()">Mumu Üfle! 🌬️</button>
     </div>
 
     <div id="hediye-alani">
+        <div class="balonlar">🎈🎈🎈</div>
         <div class="kutu" onclick="hediyeyiAc()"></div>
-        <p>Açmak için kutuya tıkla!</p>
+        <p id="click-text" style="font-size: 1.2rem; color: #555;">Açmak için kutuya tıkla!</p>
+        
         <div id="mektup">
-            <h1>Happy Birthday! 🎂✨</h1>
-            <p>On this very special day, I want to thank you for your endless support, kindness, and dedication. May all your dreams come true.</p>
+            <h1 style="color: #d97706;">Happy Birthday! 🎂✨</h1>
+            <p style="font-size: 1.1rem; line-height: 1.6;">
+                On this very special day, I want to thank you for your endless support, kindness, and dedication. 
+                Thank you for always believing in us and encouraging us to do our best. 
+                May this new year of your life bring you abundant health, endless happiness, and peace. 
+                May all your dreams come true.
+            </p>
         </div>
     </div>
 
     <script>
         function mumuSondur() {
-            // Sönük resim için .jpeg uzantısını kullan
+            // Mumu söndür
             document.getElementById('sahne').style.backgroundImage = "url('sonuk.jpeg')";
             
+            // 2 saniye bekle
             setTimeout(() => {
                 document.getElementById('sahne').style.opacity = '0';
+                
+                // Sahneyi kaldır ve hediyeyi yavaşça göster
                 setTimeout(() => {
                     document.getElementById('sahne').style.display = 'none';
-                    document.getElementById('hediye-alani').style.display = 'flex';
+                    const h = document.getElementById('hediye-alani');
+                    h.style.display = 'flex';
+                    // Küçük bir gecikme ile opacity'yi 1 yap ki yavaşça beliresin
+                    setTimeout(() => { h.style.opacity = '1'; }, 50);
                 }, 1000);
-            }, 1000);
+            }, 2000); 
         }
 
         function hediyeyiAc() {
             document.querySelector('.kutu').style.display = 'none';
-            document.querySelector('p').style.display = 'none';
+            document.querySelector('.balonlar').style.display = 'none';
+            document.getElementById('click-text').style.display = 'none';
             document.getElementById('mektup').style.display = 'block';
         }
     </script>
