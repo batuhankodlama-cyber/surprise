@@ -4,101 +4,112 @@
     <meta charset="UTF-8">
     <title>Doğum Günü Sürprizi</title>
     <style>
-        /* Arka plan: Ten rengine/açık turuncuya yakın ton (#fdf4e8) */
-        body { 
-            margin: 0; padding: 0; background-color: #fdf4e8; 
-            font-family: 'Segoe UI', sans-serif; display: flex; 
-            justify-content: center; align-items: center; 
-            height: 100vh; overflow: hidden; 
+        /* Tasarım Stilleri */
+        body {
+            margin: 0; padding: 0;
+            background-color: #fdf4e8; /* İstediğin sıcak renk */
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; overflow: hidden;
         }
 
-        .screen { 
-            display: none; width: 100vw; height: 100vh; 
-            justify-content: center; align-items: center; 
-            flex-direction: column; cursor: pointer; position: absolute;
-        }
-        .active { display: flex; }
-
-        img { 
-            max-width: 80%; max-height: 60%; border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(181, 101, 29, 0.2); 
-            border: 4px solid #fff;
+        .ekran-konteyner {
+            width: 100vw; height: 100vh;
+            display: none; /* Başlangıçta gizli */
+            justify-content: center; align-items: center;
+            flex-direction: column;
+            cursor: pointer;
+            position: absolute;
         }
 
-        /* Yazı kutuları: Tema uyumlu yumuşak renkler */
-        .info-box { 
-            margin-top: 30px; background: #fffaf0; 
-            padding: 15px 30px; border-radius: 25px; 
+        .gorunur { display: flex; }
+
+        .resim-cerceve {
+            max-width: 80%; max-height: 60%;
+            border-radius: 25px;
+            border: 5px solid #ffffff;
+            box-shadow: 0 15px 35px rgba(139, 69, 19, 0.15);
+        }
+
+        .bilgi-kutusu {
+            margin-top: 30px;
+            background: #ffffff;
+            padding: 20px 40px;
+            border-radius: 50px;
             border: 2px solid #eecfa1;
-            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.1);
-            font-weight: 600; color: #8b4513;
-            transition: transform 0.3s;
-        }
-        .info-box:hover { transform: scale(1.03); }
-
-        .balloon { 
-            position: absolute; bottom: -100px; width: 40px; height: 50px; 
-            background: #ffab91; border-radius: 50%; z-index: 5;
+            color: #8b4513;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 8px 20px rgba(139, 69, 19, 0.1);
         }
 
-        #final-message { 
-            background: #fffaf0; padding: 40px; border-radius: 30px; 
-            max-width: 500px; text-align: center; border: 3px solid #eecfa1;
-            box-shadow: 0 10px 40px rgba(139, 69, 19, 0.15); display: block;
+        #balon-alan { width: 100vw; height: 100vh; position: absolute; }
+        .balon { position: absolute; bottom: -100px; width: 40px; height: 50px; background: #ffab91; border-radius: 50%; }
+
+        #final-kutu {
+            background: #ffffff; padding: 50px;
+            border-radius: 40px; border: 4px solid #eecfa1;
+            max-width: 600px; text-align: center;
+            box-shadow: 0 20px 50px rgba(139, 69, 19, 0.2);
         }
     </style>
 </head>
 <body>
 
-    <div id="screen1" class="screen active" onclick="goNext('screen2')">
-        <img src="yanik.jpeg" alt="Mum">
-        <div class="info-box">Mum yanıyor... Üflemek için tıklayın.</div>
+    <!-- 1. Aşama: Yanık Mum -->
+    <div id="ekran1" class="ekran-konteyner gorunur" onclick="ilerle('ekran2')">
+        <img src="yanik.jpeg" class="resim-cerceve" alt="Mum">
+        <div class="bilgi-kutusu">Mumu üflemek için tıklayın...</div>
     </div>
 
-    <div id="screen2" class="screen" onclick="goNext('balloon-screen')">
-        <img src="sonuk.jpeg" alt="Sönük">
-        <div class="info-box">Süper! Bir sonraki aşama için tıklayın.</div>
+    <!-- 2. Aşama: Sönük Mum -->
+    <div id="ekran2" class="ekran-konteyner" onclick="ilerle('ekran3')">
+        <img src="sonuk.jpeg" class="resim-cerceve" alt="Sönük">
+        <div class="bilgi-kutusu">Şimdi hediyeleri hazırlayalım... Tıklayın.</div>
     </div>
 
-    <div id="balloon-screen" class="screen" onclick="goNext('screen3')">
-        <div id="balloon-container"></div>
-        <div class="info-box" style="z-index: 10;">Balonlar uçuyor! Devam etmek için tıklayın...</div>
+    <!-- 3. Aşama: Balonlar -->
+    <div id="ekran3" class="ekran-konteyner" onclick="ilerle('ekran4')">
+        <div id="balon-alan"></div>
+        <div class="bilgi-kutusu" style="z-index: 10;">Balonlar yükseliyor! Hediyeyi açmak için tıklayın.</div>
     </div>
 
-    <div id="screen3" class="screen" onclick="showFinal()">
-        <img src="hediyeler.jpeg" alt="Hediye">
-        <div class="info-box">Hediyeyi açmak için son bir tıklama!</div>
+    <!-- 4. Aşama: Hediye -->
+    <div id="ekran4" class="ekran-konteyner" onclick="sonFinal()">
+        <img src="hediyeler.jpeg" class="resim-cerceve" alt="Hediye">
+        <div class="bilgi-kutusu">Son bir adım! Paketi açmak için tıklayın.</div>
     </div>
 
-    <div id="screen4" class="screen">
-        <div id="final-message">
+    <!-- 5. Aşama: Mesaj -->
+    <div id="ekran5" class="ekran-konteyner">
+        <div id="final-kutu">
             <h2 style="color: #d2691e;">Happy Birthday! 🎂✨</h2>
             <p>On this very special day, I want to thank you for your endless support, kindness, and dedication. Thank you for always believing in us and encouraging us to do our best. May this new year of your life bring you abundant health, endless happiness, and peace. May all your dreams come true.</p>
         </div>
     </div>
 
     <script>
-        function goNext(nextId) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(nextId).classList.add('active');
-            if(nextId === 'balloon-screen') launchBalloons();
+        function ilerle(sonrakiId) {
+            document.querySelectorAll('.ekran-konteyner').forEach(e => e.classList.remove('gorunur'));
+            document.getElementById(sonrakiId).classList.add('gorunur');
+            if(sonrakiId === 'ekran3') { balonBaslat(); }
         }
 
-        function launchBalloons() {
-            const container = document.getElementById('balloon-container');
-            for(let i=0; i<25; i++) {
+        function balonBaslat() {
+            const alan = document.getElementById('balon-alan');
+            for(let i=0; i<30; i++) {
                 let b = document.createElement('div');
-                b.className = 'balloon';
-                b.style.left = Math.random() * 95 + 'vw';
-                b.style.transition = 'all 5s linear';
-                container.appendChild(b);
-                setTimeout(() => b.style.transform = 'translateY(-120vh)', 50);
+                b.className = 'balon';
+                b.style.left = Math.random() * 90 + 'vw';
+                b.style.transition = 'transform 5s linear';
+                alan.appendChild(b);
+                setTimeout(() => { b.style.transform = 'translateY(-120vh)'; }, 50);
             }
         }
 
-        function showFinal() {
-            document.getElementById('screen3').style.display = 'none';
-            document.getElementById('screen4').classList.add('active');
+        function sonFinal() {
+            document.getElementById('ekran4').classList.remove('gorunur');
+            document.getElementById('ekran5').classList.add('gorunur');
         }
     </script>
 </body>
