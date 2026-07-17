@@ -1,536 +1,141 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Happy Birthday! 🎁</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-:root{
-  --gold-dark:#b45309;
-  --text-dark:#451a03;
-  --color-orange: #f97316;
-  --color-gold: #d97706;
-  --color-cream: #fed7aa;
-  --color-peach: #ffedd5;
-  --color-champagne: #ca8a04;
-}
-html,body{
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  background-color: #150901; /* Boşluklarda arka planın sırıtmaması için koyu tema */
-}
-body {
-  font-family:'Poppins',sans-serif;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  perspective: 1000px;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday! 🎁</title>
+    <style>
+        /* Tüm sayfayı sıfır boşlukla kaplaması için ayarlar */
+        body, html { 
+            margin: 0; 
+            padding: 0; 
+            width: 100%; 
+            height: 100%; 
+            overflow: hidden; 
+            font-family: 'Segoe UI', sans-serif; 
+        }
 
-/* ── 1. SAYFA: DOĞUM GÜNÜ & PASTA SAHNESİ ── */
-#cake-page {
-  position: fixed;
-  inset: 0;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: opacity 1s ease;
-}
+        /* 1. SAHNE: PASTA EKRANI */
+        #sahne {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100vw; 
+            height: 100vh;
+            background-image: url('yanik.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: background-image 0.5s ease, opacity 1s ease;
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-end;
+        }
+        
+        /* Mum söndüğünde görseli değiştiren sınıf */
+        #sahne.sonuk { 
+            background-image: url('sonuk.jpg'); 
+        }
 
-/* 🖥️ KUSURSUZLUK KUTUSU (Görselin orijinal 1920x1016 oranına kilitlendi) */
-.canvas-container {
-  position: relative;
-  aspect-ratio: 1920 / 1016;
-  width: 100vw;
-  max-height: 100vh;
-  box-shadow: 0 0 100px rgba(0,0,0,0.8);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-}
+        .btn {
+            padding: 15px 40px; 
+            font-size: 20px; 
+            cursor: pointer;
+            background: #f59e0b; 
+            border: none; 
+            border-radius: 50px;
+            color: white; 
+            margin-bottom: 50px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        .btn:hover { transform: scale(1.05); }
 
-#bg-image-container {
-  position: absolute;
-  inset: 0;
-  background-image: url('arka-plan.jpeg');
-  background-size: 100% 100%; /* Resmi esnetmeden tam kaplar */
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 1;
-}
+        /* 2. SAHNE: HEDİYE EKRANI */
+        #hediye-alani {
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100vw; 
+            height: 100vh;
+            background: linear-gradient(135deg, #fff7ed, #ffedd5); 
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center;
+            opacity: 0; 
+            transition: opacity 1s ease;
+        }
 
-#bg-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.25);
-  z-index: 2;
-}
-
-/* 📍 PASTA ÜZERİNE TAM SABİTLENMİŞ MUM (Hassas Koordinat Kilidi) */
-#candle-container {
-  position: absolute;
-  top: 42.3%;  /* Pastanın en üst tepe noktasının dikey koordinatı */
-  left: 49.3%; /* Yatayda tam ortası */
-  transform: translate(-50%, -100%);
-  z-index: 5;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Mum Gövdesi */
-.candle-body {
-  width: clamp(5px, 0.5vw, 8px);
-  height: clamp(25px, 2.5vw, 40px);
-  background: linear-gradient(to right, #ffffff, #fef08a, #f59e0b);
-  border-radius: 2px;
-  position: relative;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.4);
-}
-
-/* Mum Fitili */
-.candle-wick {
-  width: 1.5px;
-  height: clamp(5px, 0.5vw, 8px);
-  background-color: #111827;
-  position: absolute;
-  top: calc(clamp(5px, 0.5vw, 8px) * -1);
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-/* Yanıp Sönen Doğal Alev */
-.candle-flame {
-  width: clamp(8px, 0.8vw, 12px);
-  height: clamp(18px, 1.8vw, 26px);
-  background: radial-gradient(ellipse at bottom, #ffffff 15%, #fef08a 40%, #f97316 70%, #dc2626 100%);
-  border-radius: 50% 50% 20% 20% / 60% 60% 40% 40%;
-  position: absolute;
-  top: calc((clamp(18px, 1.8vw, 26px) + clamp(5px, 0.5vw, 8px)) * -1.05);
-  left: 50%;
-  transform: translateX(-50%);
-  box-shadow: 0 0 15px #f59e0b, 0 0 30px #ef4444;
-  transform-origin: center bottom;
-  animation: flicker 1.2s infinite alternate ease-in-out;
-}
-
-/* Sönme Animasyonu */
-.candle-flame.out {
-  animation: none !important;
-  opacity: 0;
-  transform: translateX(-50%) scale(0);
-  transition: all 0.4s ease;
-}
-
-/* Duman */
-#smoke {
-  position: absolute;
-  top: -45px;
-  width: 2px;
-  height: 0px;
-  background: rgba(255,255,255,0.4);
-  filter: blur(2px);
-  opacity: 0;
-  transition: all 1.5s ease;
-}
-#smoke.active {
-  width: 12px;
-  height: 30px;
-  opacity: 1;
-  transform: translateY(-15px) scaleX(1.4);
-  background: rgba(255,255,255,0);
-}
-
-@keyframes flicker {
-  0% { transform: translateX(-50%) rotate(-2deg) scaleY(1); }
-  50% { transform: translateX(-50%) rotate(3deg) scaleY(1.06) scaleX(0.95); }
-  100% { transform: translateX(-50%) rotate(-1deg) scaleY(0.95) scaleX(1.05); }
-}
-
-/* Bilgilendirme Butonu */
-#blow-tip {
-  position: absolute;
-  bottom: 8%;
-  font-size: clamp(0.85rem, 1.1vw, 1.05rem);
-  font-weight: 700;
-  color: #fff;
-  background: linear-gradient(135deg, var(--color-orange), var(--color-gold));
-  padding: 12px 28px;
-  border-radius: 30px;
-  box-shadow: 0 10px 25px rgba(217, 119, 6, 0.5);
-  text-align: center;
-  border: 2px solid #fff;
-  z-index: 15;
-  animation: pulseButton 1.5s ease-in-out infinite;
-  transition: all 0.4s ease;
-}
-@keyframes pulseButton {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.03); }
-}
-
-/* ── 2. SAYFA: HEDİYE & MEKTUP SAYFASI ── */
-#gift-page {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 25px;
-  background: linear-gradient(135deg, #fff7ed, #ffedd5, #fef3c7);
-  padding: 20px;
-  opacity: 0;
-  transition: opacity 0.8s ease;
-}
-
-#gift-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-/* 🎁 CSS HEDİYE KUTUSU */
-.gift-box {
-  position: relative;
-  width: 160px;
-  height: 160px;
-  background: #e11d48; 
-  border-radius: 12px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.18);
-  cursor: pointer;
-  transition: transform 0.3s ease;
-  animation: bounceGift 2s infinite ease-in-out;
-}
-.gift-box:hover {
-  transform: scale(1.05);
-}
-/* Dikey Kurdele */
-.gift-box::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 0;
-  width: 26px;
-  height: 100%;
-  background: #f59e0b; 
-  transform: translateX(-50%);
-  border-radius: 4px;
-}
-/* Yatay Kurdele */
-.gift-box::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: 100%;
-  height: 26px;
-  background: #f59e0b;
-  transform: translateY(-50%);
-  border-radius: 4px;
-}
-/* Hediye Kapağı */
-.gift-lid {
-  position: absolute;
-  top: -15px;
-  left: -10px;
-  width: 180px;
-  height: 35px;
-  background: #be123c;
-  border-radius: 8px;
-  box-shadow: 0 5px 10px rgba(0,0,0,0.15);
-  z-index: 2;
-  transition: transform 0.5s ease;
-}
-.gift-lid::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  width: 26px;
-  height: 100%;
-  background: #d97706;
-  transform: translateX(-50%);
-}
-/* Kurdele Fiyongu */
-.gift-bow {
-  position: absolute;
-  top: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 50px;
-  height: 30px;
-  z-index: 3;
-  transition: transform 0.5s ease;
-}
-.gift-bow::before, .gift-bow::after {
-  content: '';
-  position: absolute;
-  width: 30px;
-  height: 30px;
-  border: 8px solid #f59e0b;
-  border-radius: 50%;
-}
-.gift-bow::before { left: -10px; transform: rotate(-15deg); }
-.gift-bow::after { right: -10px; transform: rotate(15deg); }
-
-/* Kutu Açılma Animasyonu */
-.gift-box.open .gift-lid {
-  transform: translateY(-80px) rotate(15deg) scale(0.9);
-  opacity: 0;
-}
-.gift-box.open .gift-bow {
-  transform: translate(-50%, -100px) rotate(-15deg) scale(0.8);
-  opacity: 0;
-}
-.gift-box.open {
-  transform: scale(0.1);
-  opacity: 0;
-  transition: all 0.8s cubic-bezier(0.6, -0.28, 0.735, 0.045);
-}
-
-@keyframes bounceGift {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-12px) rotate(3deg); }
-}
-
-/* 👆 "TIKLAYIN" YÖNLENDİRME YAZISI */
-.click-prompt {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: #be123c;
-  background: rgba(254, 215, 170, 0.75);
-  padding: 10px 24px;
-  border-radius: 30px;
-  border: 2px dashed #e11d48;
-  animation: pulseText 1.5s infinite;
-  text-align: center;
-  user-select: none;
-}
-@keyframes pulseText {
-  0%, 100% { opacity: 0.8; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.05); }
-}
-
-/* ✉️ MEKTUP KARTI */
-#letter {
-  display: none;
-  width: 100%;
-  max-width: 480px; 
-  background: white;
-  border-radius: 24px;
-  padding: 40px;
-  box-shadow: 0 30px 60px rgba(69, 26, 3, 0.18);
-  border: 1px solid var(--color-cream);
-  max-height: 85vh;
-  overflow-y: auto;
-  animation: popLetter 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-#letter p {
-  font-size: 1.05rem;
-  line-height: 1.7;
-  color: var(--text-dark);
-  text-align: justify;
-}
-#letter strong {
-  display: block;
-  margin-top: 20px;
-  text-align: right;
-  color: var(--color-gold);
-  font-size: 1.2rem;
-}
-@keyframes popLetter {
-  from { transform: scale(0.5) translateY(50px); opacity: 0; }
-  to { transform: scale(1) translateY(0); opacity: 1; }
-}
-
-/* ── BALONLAR & KONFETİLER ── */
-#balloon-curtain {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  pointer-events: none;
-}
-.balloon {
-  position: absolute;
-  bottom: -150px;
-  width: clamp(55px, 6vw, 85px);
-  height: clamp(75px, 8vw, 110px);
-  border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
-  box-shadow: inset -8px -8px 15px rgba(0,0,0,0.15), 0 8px 20px rgba(0,0,0,0.1);
-  opacity: 0;
-  animation: floatUpAndAway var(--dur) ease-in-out forwards;
-}
-.balloon::after {
-  content: "";
-  position: absolute;
-  bottom: -8px; left: 50%;
-  transform: translateX(-50%);
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-bottom: 8px solid currentColor;
-}
-@keyframes floatUpAndAway {
-  0% { transform: translateY(0) scale(1) rotate(var(--rot)); opacity: 0; }
-  15% { opacity: 0.95; } 
-  90% { opacity: 0.95; }
-  100% { transform: translateY(-130vh) scale(1.1) rotate(calc(var(--rot) * 2)); opacity: 0; }
-}
-
-#confetti-container {
-  position: fixed; inset: 0; pointer-events: none; z-index: 150;
-}
-.confetti {
-  position: absolute; width: 8px; height: 8px;
-  animation: fall var(--fall-dur) linear forwards;
-}
-@keyframes fall {
-  to { transform: translateY(110dvh) rotate(360deg); }
-}
-</style>
+        .kutu { 
+            width: 150px; 
+            height: 150px; 
+            background: #e11d48; 
+            cursor: pointer; 
+            border-radius: 12px; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        .kutu:hover { transform: scale(1.1); }
+        
+        #mektup { 
+            display: none; 
+            padding: 40px; 
+            text-align: center; 
+            color: #451a03; 
+            max-width: 600px; 
+            background: white; 
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+    </style>
 </head>
 <body>
 
-<!-- 1. SAYFA: PASTA EKRANI -->
-<div id="cake-page" onclick="triggerBlowSequence()">
-  <!-- Bilgisayar Çözünürlük Koruma Kutusu (Orijinal 1920x1016 Oranı) -->
-  <div class="canvas-container">
-    <div id="bg-image-container"></div>
-    <div id="bg-overlay"></div>
-    
-    <!-- Milim Oynamayan Pasta Üstü Mum -->
-    <div id="candle-container">
-      <div id="flame" class="candle-flame"></div>
-      <div class="candle-wick"></div>
-      <div class="candle-body"></div>
-      <div id="smoke"></div>
+    <!-- Pasta Ekranı -->
+    <div id="sahne">
+        <button class="btn" onclick="mumuSondur()">Mumu Üfle! 🌬️</button>
     </div>
 
-    <div id="blow-tip">Mumu söndürmek için dokunun ve üfleyin! 🌬️</div>
-  </div>
-</div>
-
-<!-- 2. SAYFA: HEDİYE EKRANI -->
-<div id="gift-page">
-  <div id="gift-container">
-    <div class="gift-box" onclick="openGift()">
-      <div class="gift-bow"></div>
-      <div class="gift-lid"></div>
+    <!-- Hediye Ekranı -->
+    <div id="hediye-alani">
+        <div class="kutu" onclick="hediyeyiAc()"></div>
+        <p style="margin-top: 20px; color: #e11d48; font-weight: bold;">Açmak için kutuya tıkla! 🎁</p>
+        
+        <div id="mektup">
+            <h1 style="color: #d97706;">Happy Birthday! 🎂✨</h1>
+            <p style="font-size: 1.2rem; line-height: 1.6;">
+                On this very special day, I want to thank you for your endless support, kindness, and dedication. 
+                Thank you for always believing in us and encouraging us to do our best. 
+                May this new year of your life bring you abundant health, endless happiness, and peace. 
+                May all your dreams come true.
+            </p>
+        </div>
     </div>
-    <div class="click-prompt">Açmak için Kutunun Üzerine Tıklayın! 🎁</div>
-  </div>
-  
-  <div id="letter">
-    <p>
-      On this very special day, I want to thank you for your endless support, kindness, and dedication. Thank you for always believing in us and encouraging us to do our best.<br><br>
-      May this new year of your life bring you abundant health, endless happiness, and peace. May all your dreams come true.
-      <strong>Happy Birthday! 🎂✨</strong>
-    </p>
-  </div>
-</div>
 
-<div id="balloon-curtain"></div>
-<div id="confetti-container"></div>
+    <script>
+        function mumuSondur() {
+            // Görseli sönük olanla değiştir
+            document.getElementById('sahne').classList.add('sonuk');
+            
+            // 1 saniye bekle, sahneyi karart
+            setTimeout(() => {
+                document.getElementById('sahne').style.opacity = '0';
+                
+                // Hediyeye geçiş
+                setTimeout(() => {
+                    document.getElementById('sahne').style.display = 'none';
+                    const h = document.getElementById('hediye-alani');
+                    h.style.display = 'flex';
+                    setTimeout(() => { h.style.opacity = '1'; }, 50);
+                }, 1000);
+            }, 1000);
+        }
 
-<script>
-const colors = ['#f97316', '#d97706', '#fed7aa', '#ffedd5', '#ca8a04', '#ea580c', '#fef3c7'];
-const curtain = document.getElementById('balloon-curtain');
-let isBlown = false;
-
-// Sayfa yüklendikten 1 saniye sonra balonlar pürüzsüzce uçar
-window.addEventListener('DOMContentLoaded', () => {
-  for(let i=0; i<85; i++){
-    const b = document.createElement('div');
-    b.className = 'balloon';
-    b.style.left = Math.random() * 100 + '%';
-    b.style.background = colors[Math.floor(Math.random() * colors.length)];
-    b.style.color = b.style.background;
-    b.style.setProperty('--dur', (4 + Math.random() * 5) + 's');
-    b.style.setProperty('--rot', (Math.random() * 30 - 15) + 'deg');
-    b.style.animationDelay = (1 + Math.random() * 2.5) + 's'; /* 1sn kesin gecikme */
-    curtain.appendChild(b);
-  }
-});
-
-// Üfleme İşlemi (2sn üfleme efekti)
-function triggerBlowSequence() {
-  if (isBlown) return;
-  isBlown = true;
-
-  const tip = document.getElementById('blow-tip');
-  tip.innerHTML = "Üfleniyor... 🌬️💨";
-  tip.style.background = "linear-gradient(135deg, #0284c7, #0369a1)"; 
-  tip.style.animation = "none";
-
-  setTimeout(() => {
-    blowOut();
-  }, 2000);
-}
-
-// Ekranı Karart, 1.5sn Bekle ve Hediyeyi Getir
-function blowOut() {
-  document.getElementById('flame').classList.add('out');
-  document.getElementById('smoke').classList.add('active');
-  document.getElementById('blow-tip').style.opacity = '0';
-  
-  createConfetti();
-
-  // Ekranı karart
-  setTimeout(() => {
-    document.getElementById('cake-page').style.opacity = '0';
-  }, 600);
-
-  // Pasta sayfasını kaldırıp 1.5 saniye siyah ekranda bekletip hediyeyi açma
-  setTimeout(() => {
-    document.getElementById('cake-page').style.display = 'none';
-    
-    const giftPage = document.getElementById('gift-page');
-    giftPage.style.display = 'flex';
-    
-    setTimeout(() => {
-      giftPage.style.opacity = '1';
-    }, 50);
-  }, 2100); /* 600ms kararma + 1500ms tam karartma bekleyişi = 2100ms */
-}
-
-// Hediyeyi Aç ve Mektubu Göster
-function openGift() {
-  const gift = document.querySelector('.gift-box');
-  const container = document.getElementById('gift-container');
-  
-  gift.classList.add('open');
-  createConfetti();
-  
-  setTimeout(() => {
-    container.style.display = 'none';
-    document.getElementById('letter').style.display = 'block';
-    createConfetti();
-  }, 800);
-}
-
-// Konfeti Yağmuru
-function createConfetti() {
-  const container = document.getElementById('confetti-container');
-  for(let i=0; i<120; i++) {
-    const c = document.createElement('div');
-    c.className = 'confetti';
-    c.style.left = Math.random() * 100 + '%';
-    c.style.top = '-10px';
-    c.style.background = colors[Math.floor(Math.random() * colors.length)];
-    c.style.setProperty('--fall-dur', (2 + Math.random() * 3.5) + 's');
-    c.style.transform = `scale(${Math.random() * 0.8 + 0.55})`;
-    container.appendChild(c);
-    setTimeout(() => c.remove(), 4500);
-  }
-}
-</script>
+        function hediyeyiAc() {
+            document.querySelector('.kutu').style.display = 'none';
+            document.querySelector('p').style.display = 'none';
+            document.getElementById('mektup').style.display = 'block';
+        }
+    </script>
 </body>
 </html>
