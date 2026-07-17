@@ -2,91 +2,60 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Happy Birthday! 🎁</title>
+    <title>Doğum Günü Sürprizi</title>
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: sans-serif; }
-
-        /* PASTA SAHNESİ */
-        #sahne {
-            position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-image: url('yanik.jpeg');
-            background-size: cover; background-position: center;
-            display: flex; justify-content: center; align-items: flex-end;
-            transition: background-image 0.5s ease;
-        }
-        .btn { padding: 20px 40px; margin-bottom: 50px; cursor: pointer; background: #f59e0b; color: white; border: none; border-radius: 50px; font-size: 20px; font-weight: bold; }
-
-        /* HEDİYE SAHNESİ */
-        #hediye-alani {
-            display: none; width: 100vw; height: 100vh; background: #f0f0f0;
-            flex-direction: column; justify-content: center; align-items: center;
-            opacity: 0; transition: opacity 2s ease; /* Yavaşça açılma burada */
-        }
+        body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background: #000; color: #fff; font-family: sans-serif; text-align: center; overflow: hidden; }
+        .screen { display: none; width: 100%; height: 100%; justify-content: center; align-items: center; cursor: pointer; position: absolute; }
+        .active { display: flex; flex-direction: column; }
+        img { max-width: 80%; max-height: 80%; border-radius: 10px; }
         
-        /* Balonlar için basit bir stil */
-        .balonlar { font-size: 50px; margin-bottom: 20px; }
-
-        .kutu { 
-            width: 350px; height: 200px; 
-            background-image: url('hediyeler.jpeg'); 
-            background-size: contain; background-repeat: no-repeat;
-            cursor: pointer; margin-bottom: 20px;
-        }
-
-        #mektup { 
-            display: none; padding: 40px; text-align: center; color: #451a03; 
-            max-width: 600px; background: #eef2f5; border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
+        /* Balon Animasyonu */
+        .balloon { position: absolute; bottom: -100px; width: 40px; height: 50px; background: radial-gradient(circle at 30% 30%, #ffcc00, #ff6600); border-radius: 50%; animation: floatUp 1.5s forwards; }
+        @keyframes floatUp { to { transform: translateY(-110vh); opacity: 0; } }
+        
+        #message-box { background: #e0f7fa; color: #333; padding: 20px; border-radius: 15px; max-width: 400px; display: none; }
     </style>
 </head>
 <body>
 
-    <div id="sahne">
-        <button class="btn" onclick="mumuSondur()">Mumu Üfle! 🌬️</button>
-    </div>
-
-    <div id="hediye-alani">
-        <div class="balonlar">🎈🎈🎈</div>
-        <div class="kutu" onclick="hediyeyiAc()"></div>
-        <p id="click-text" style="font-size: 1.2rem; color: #555;">Açmak için kutuya tıkla!</p>
-        
-        <div id="mektup">
-            <h1 style="color: #d97706;">Happy Birthday! 🎂✨</h1>
-            <p style="font-size: 1.1rem; line-height: 1.6;">
-                On this very special day, I want to thank you for your endless support, kindness, and dedication. 
-                Thank you for always believing in us and encouraging us to do our best. 
-                May this new year of your life bring you abundant health, endless happiness, and peace. 
-                May all your dreams come true.
-            </p>
-        </div>
-    </div>
+    <div id="screen1" class="screen active" onclick="startSequence()"><h1>Buraya tıklayın ve mumu üfleyin!</h1></div>
+    <div id="screen2" class="screen"><img src="sonuk.jpeg" alt="Mum Sönük"></div>
+    <div id="balloon-screen" class="screen"></div>
+    <div id="screen3" class="screen" onclick="openGift()"><img src="hediyeler.jpeg" alt="Hediyeler"><p>Açmak için tıklayın</p></div>
+    <div id="screen4" class="screen"><div id="message-box"><h2>Happy Birthday! 🎂✨</h2><p>On this very special day, I want to thank you for your endless support, kindness, and dedication. Thank you for always believing in us and encouraging us to do our best. May this new year of your life bring you abundant health, endless happiness, and peace. May all your dreams come true.</p></div></div>
 
     <script>
-        function mumuSondur() {
-            // Mumu söndür
-            document.getElementById('sahne').style.backgroundImage = "url('sonuk.jpeg')";
-            
-            // 2 saniye bekle
+        function startSequence() {
+            document.getElementById('screen1').classList.remove('active');
             setTimeout(() => {
-                document.getElementById('sahne').style.opacity = '0';
-                
-                // Sahneyi kaldır ve hediyeyi yavaşça göster
+                document.getElementById('screen2').classList.add('active');
                 setTimeout(() => {
-                    document.getElementById('sahne').style.display = 'none';
-                    const h = document.getElementById('hediye-alani');
-                    h.style.display = 'flex';
-                    // Küçük bir gecikme ile opacity'yi 1 yap ki yavaşça beliresin
-                    setTimeout(() => { h.style.opacity = '1'; }, 50);
-                }, 1000);
-            }, 2000); 
+                    document.getElementById('screen2').classList.remove('active');
+                    showBalloons();
+                }, 1500);
+            }, 2000);
         }
 
-        function hediyeyiAc() {
-            document.querySelector('.kutu').style.display = 'none';
-            document.querySelector('.balonlar').style.display = 'none';
-            document.getElementById('click-text').style.display = 'none';
-            document.getElementById('mektup').style.display = 'block';
+        function showBalloons() {
+            const container = document.getElementById('balloon-screen');
+            container.classList.add('active');
+            for (let i = 0; i < 20; i++) {
+                let b = document.createElement('div');
+                b.className = 'balloon';
+                b.style.left = Math.random() * 100 + 'vw';
+                b.style.animationDelay = Math.random() * 0.5 + 's';
+                container.appendChild(b);
+            }
+            setTimeout(() => {
+                container.classList.remove('active');
+                document.getElementById('screen3').classList.add('active');
+            }, 1500);
+        }
+
+        function openGift() {
+            document.getElementById('screen3').classList.remove('active');
+            document.getElementById('screen4').classList.add('active');
+            document.getElementById('message-box').style.display = 'block';
         }
     </script>
 </body>
