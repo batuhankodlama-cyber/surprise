@@ -2,114 +2,402 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Doğum Günü Sürprizi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doğum Gününüz Kutlu Olsun Öğretmenim!</title>
+    <!-- Google Fonts entegrasyonu (Zarif bir görünüm için) -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        /* Tasarım Stilleri */
-        body {
-            margin: 0; padding: 0;
-            background-color: #fdf4e8; /* İstediğin sıcak renk */
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            display: flex; justify-content: center; align-items: center;
-            height: 100vh; overflow: hidden;
+        /* Genel Sınıf ve Reset Ayarları */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
         }
 
-        .ekran-konteyner {
-            width: 100vw; height: 100vh;
-            display: none; /* Başlangıçta gizli */
-            justify-content: center; align-items: center;
-            flex-direction: column;
-            cursor: pointer;
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #0d0d0d;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Ekran Katmanları */
+        .screen {
             position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
         }
 
-        .gorunur { display: flex; }
-
-        .resim-cerceve {
-            max-width: 80%; max-height: 60%;
-            border-radius: 25px;
-            border: 5px solid #ffffff;
-            box-shadow: 0 15px 35px rgba(139, 69, 19, 0.15);
+        .active {
+            display: flex !important;
         }
 
-        .bilgi-kutusu {
-            margin-top: 30px;
-            background: #ffffff;
-            padding: 20px 40px;
-            border-radius: 50px;
-            border: 2px solid #eecfa1;
-            color: #8b4513;
-            font-weight: bold;
-            font-size: 1.2rem;
-            box-shadow: 0 8px 20px rgba(139, 69, 19, 0.1);
+        /* Tam Ekran Arka Plan Resimleri (Ekran 1 ve Ekran 2 için) */
+        .fullscreen-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
         }
 
-        #balon-alan { width: 100vw; height: 100vh; position: absolute; }
-        .balon { position: absolute; bottom: -100px; width: 40px; height: 50px; background: #ffab91; border-radius: 50%; }
+        /* Zarif, Süslü Butonlar ve Çerçeveler */
+        .fancy-trigger {
+            position: absolute;
+            bottom: 8%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            padding: 15px 35px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #f7d070;
+            background: rgba(13, 13, 13, 0.85);
+            border: 2px solid #f7d070;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(247, 208, 112, 0.3), inset 0 0 10px rgba(247, 208, 112, 0.2);
+            transition: all 0.4s ease;
+            text-align: center;
+            animation: pulse-border 2s infinite ease-in-out;
+        }
 
-        #final-kutu {
-            background: #ffffff; padding: 50px;
-            border-radius: 40px; border: 4px solid #eecfa1;
-            max-width: 600px; text-align: center;
-            box-shadow: 0 20px 50px rgba(139, 69, 19, 0.2);
+        .fancy-trigger:hover {
+            background: #f7d070;
+            color: #0d0d0d;
+            box-shadow: 0 0 25px rgba(247, 208, 112, 0.8);
+            transform: translateX(-50%) scale(1.05);
+        }
+
+        @keyframes pulse-border {
+            0%, 100% {
+                box-shadow: 0 0 15px rgba(247, 208, 112, 0.3), inset 0 0 10px rgba(247, 208, 112, 0.1);
+            }
+            50% {
+                box-shadow: 0 0 25px rgba(247, 208, 112, 0.6), inset 0 0 15px rgba(247, 208, 112, 0.3);
+            }
+        }
+
+        /* 1. EKRAN: Sisli Katman */
+        #fog-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(240,240,245,0.92) 0%, rgba(200,200,210,0.98) 100%);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: opacity 2.5s cubic-bezier(0.25, 1, 0.5, 1), transform 2.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* Sis bulutu efektleri */
+        .fog-cloud {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(0,0,0,0) 70%);
+            animation: drift 20s infinite linear;
+            pointer-events: none;
+        }
+
+        @keyframes drift {
+            0% { transform: translate(-10%, -10%) rotate(0deg); }
+            100% { transform: translate(10%, 10%) rotate(360deg); }
+        }
+
+        #fog-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: #4a4a4a;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid rgba(0,0,0,0.15);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            z-index: 101;
+            transition: opacity 1s;
+        }
+
+        /* Sis açıldığında kenarlara doğru kaybolma efekti */
+        .fog-disappear {
+            opacity: 0 !important;
+            transform: scale(1.3);
+            pointer-events: none;
+        }
+
+        /* Kararma ve Açılma Efekti (Ekran 2 -> Ekran 3 Geçişi için) */
+        #blackout-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            opacity: 0;
+            z-index: 999;
+            pointer-events: none;
+            transition: opacity 1.5s ease;
+        }
+
+        /* 3. EKRAN: Hediye Kutusu Ekranı Tasarımı */
+        #gift-screen {
+            background: linear-gradient(135deg, #1f140e 0%, #0d0603 100%);
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .gift-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 600px;
+            width: 90%;
+            padding: 30px;
+            border-radius: 15px;
+            background: rgba(43, 29, 21, 0.7);
+            border: 2px solid #d4af37;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(212, 175, 55, 0.15);
+            z-index: 5;
+            text-align: center;
+        }
+
+        .gift-image-wrapper {
+            width: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            margin-bottom: 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+        }
+
+        .gift-img {
+            width: 100%;
+            display: block;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .gift-img:hover {
+            transform: scale(1.02);
+        }
+
+        /* 4. EKRAN: Mektup ve Doğum Günü Mesajı (Tamamen WhatsApp Image'deki Tasarım Tonlarında) */
+        #message-screen {
+            background: linear-gradient(135deg, #1f140e 0%, #0d0603 100%); /* 3. ekranla aynı arka plan tonu */
+            padding: 20px;
+        }
+
+        /* WhatsApp Görselindeki Birebir Şık Mektup Kartı Tasarımı */
+        .letter-card {
+            background-color: #e3ecf5; /* Görseldeki hafif grimsi/mavi pastel tonu */
+            max-width: 580px;
+            width: 90%;
+            padding: 40px 30px;
+            border-radius: 18px; /* Yumuşak yuvarlatılmış köşeler */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 0 1px 1px rgba(255,255,255,0.8);
+            border: 1px solid rgba(255,255,255,0.5);
+            text-align: center;
+            position: relative;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideUp 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Başlık stili (Görseldeki "Happy Birthday! 🎂✨" tasarımına sadık kalınmıştır) */
+        .letter-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: #b36b19; /* Görseldeki hardal/turuncu-kahve tonu */
+            font-weight: 800;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* Yazı içeriği (Görseldeki orijinal İngilizce tebrik mesajı birebir eklenmiştir) */
+        .letter-content {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #3e444a; /* Yumuşak antrasit-gri metin tonu */
+            font-weight: 400;
+            text-align: center;
+        }
+
+        /* Konfeti Efekti */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f7d070;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: fall 4s infinite linear;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10px) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
         }
     </style>
 </head>
 <body>
 
-    <!-- 1. Aşama: Yanık Mum -->
-    <div id="ekran1" class="ekran-konteyner gorunur" onclick="ilerle('ekran2')">
-        <img src="yanik.jpeg" class="resim-cerceve" alt="Mum">
-        <div class="bilgi-kutusu">Mumu üflemek için tıklayın...</div>
+    <!-- SİS KATMANI (Açılışta tüm ekranı kaplar) -->
+    <div id="fog-layer">
+        <div class="fog-cloud"></div>
+        <div id="fog-text">
+            <span>Sisi dağıtmak ve sürprizi başlatmak için tıklayınız... ✨</span>
+        </div>
     </div>
 
-    <!-- 2. Aşama: Sönük Mum -->
-    <div id="ekran2" class="ekran-konteyner" onclick="ilerle('ekran3')">
-        <img src="sonuk.jpeg" class="resim-cerceve" alt="Sönük">
-        <div class="bilgi-kutusu">Şimdi hediyeleri hazırlayalım... Tıklayın.</div>
+    <!-- SİYAH GEÇİŞ KATMANI (Ekran geçişlerindeki yumuşak kararma için) -->
+    <div id="blackout-layer"></div>
+
+    <!-- 1. EKRAN: YANIK PASTA (Mumu üflemeden önceki hali) -->
+    <div id="screen-cake-burning" class="screen active">
+        <img src="yanik.jpeg" alt="Doğum Günü Pastası" class="fullscreen-bg">
+        <button class="fancy-trigger" onclick="blowCandle()">
+            🎂 Buraya tıklayın ve mumu üfleyin ✨
+        </button>
     </div>
 
-    <!-- 3. Aşama: Balonlar -->
-    <div id="ekran3" class="ekran-konteyner" onclick="ilerle('ekran4')">
-        <div id="balon-alan"></div>
-        <div class="bilgi-kutusu" style="z-index: 10;">Balonlar yükseliyor! Hediyeyi açmak için tıklayın.</div>
+    <!-- 2. EKRAN: SÖNÜK PASTA (Mumu üfledikten sonraki hali) -->
+    <div id="screen-cake-extinguished" class="screen">
+        <img src="sonuk.jpeg" alt="Sönük Pasta" class="fullscreen-bg">
+        <button class="fancy-trigger" onclick="goToGiftScreen()">
+            🎁 Şimdi hediyenizi görmek için tıklayın ✨
+        </button>
     </div>
 
-    <!-- 4. Aşama: Hediye -->
-    <div id="ekran4" class="ekran-konteyner" onclick="sonFinal()">
-        <img src="hediyeler.jpeg" class="resim-cerceve" alt="Hediye">
-        <div class="bilgi-kutusu">Son bir adım! Paketi açmak için tıklayın.</div>
+    <!-- 3. EKRAN: HEDİYE KUTUSU EKRANI (Tam ekran değil, özel şık çerçeve tasarımlı) -->
+    <div id="gift-screen" class="screen">
+        <div class="gift-container">
+            <div class="gift-image-wrapper">
+                <img src="hediyeler.jpeg" alt="Hediyeler" class="gift-img">
+            </div>
+            <button class="fancy-trigger" style="position: relative; bottom: auto; left: auto; transform: none; margin-top: 10px;" onclick="openGift()">
+                🎁 Hediyeyi Açmak İçin Tıklayınız ✨
+            </button>
+        </div>
     </div>
 
-    <!-- 5. Aşama: Mesaj -->
-    <div id="ekran5" class="ekran-konteyner">
-        <div id="final-kutu">
-            <h2 style="color: #d2691e;">Happy Birthday! 🎂✨</h2>
-            <p>On this very special day, I want to thank you for your endless support, kindness, and dedication. Thank you for always believing in us and encouraging us to do our best. May this new year of your life bring you abundant health, endless happiness, and peace. May all your dreams come true.</p>
+    <!-- 4. EKRAN: MEKTUP VE DOĞUM GÜNÜ MESAJI -->
+    <div id="message-screen" class="screen">
+        <!-- Konfeti yağmuru için kapsayıcı -->
+        <div id="confetti-container" style="position: absolute; width:100%; height:100%; overflow:hidden; top:0; left:0; pointer-events:none; z-index:1;"></div>
+        
+        <!-- Şık Mektup Kartı -->
+        <div class="letter-card">
+            <!-- Görseldeki başlık ve emojiler -->
+            <h1 class="letter-title">Happy Birthday! 🎂✨</h1>
+            <!-- Görseldeki orijinal duygusal kutlama metni -->
+            <p class="letter-content">
+                On this very special day, I want to thank you for your endless support, kindness, and dedication. Thank you for always believing in us and encouraging us to do our best. May this new year of your life bring you abundant health, endless happiness, and peace. May all your dreams come true.
+            </p>
         </div>
     </div>
 
     <script>
-        function ilerle(sonrakiId) {
-            document.querySelectorAll('.ekran-konteyner').forEach(e => e.classList.remove('gorunur'));
-            document.getElementById(sonrakiId).classList.add('gorunur');
-            if(sonrakiId === 'ekran3') { balonBaslat(); }
+        // --- 1. SİSİN DAĞITILMASI ---
+        const fogLayer = document.getElementById('fog-layer');
+        const fogText = document.getElementById('fog-text');
+
+        fogLayer.addEventListener('click', () => {
+            // Yazıyı anında gizle
+            fogText.style.opacity = '0';
+            // Sis katmanını yavaşça kenarlara doğru açarak kaybet
+            fogLayer.classList.add('fog-disappear');
+            
+            // Animasyon bittikten sonra DOM'dan tamamen gizle (tıklamayı engellemek için)
+            setTimeout(() => {
+                fogLayer.style.display = 'none';
+            }, 2500);
+        });
+
+        // --- 2. MUM ÜFLEME GEÇİŞİ (1. Ekrandan 2. Ekrana) ---
+        function blowCandle() {
+            // Tıklandıktan sonra 2 saniye bekleme süresi
+            setTimeout(() => {
+                document.getElementById('screen-cake-burning').classList.remove('active');
+                document.getElementById('screen-cake-extinguished').classList.add('active');
+            }, 2000);
         }
 
-        function balonBaslat() {
-            const alan = document.getElementById('balon-alan');
-            for(let i=0; i<30; i++) {
-                let b = document.createElement('div');
-                b.className = 'balon';
-                b.style.left = Math.random() * 90 + 'vw';
-                b.style.transition = 'transform 5s linear';
-                alan.appendChild(b);
-                setTimeout(() => { b.style.transform = 'translateY(-120vh)'; }, 50);
+        // --- 3. SİNESTEZİK KARARMA VE HEDİYE EKRANINA GEÇİŞ (2. Ekrandan 3. Ekrana) ---
+        function goToGiftScreen() {
+            const blackout = document.getElementById('blackout-layer');
+            
+            // Ekranı karart
+            blackout.style.opacity = '1';
+
+            // Kararma tamamlandığında ekranları arka planda değiştir (1.5 saniye sonra)
+            setTimeout(() => {
+                document.getElementById('screen-cake-extinguished').classList.remove('active');
+                document.getElementById('gift-screen').classList.add('active');
+                
+                // Kararmayı 2-3 saniye içinde yavaş yavaş aç
+                setTimeout(() => {
+                    blackout.style.opacity = '0';
+                }, 1000); // 1. saniyede açılmaya başlar, toplamda 2.5 saniyede tamamen aydınlanır
+            }, 1500);
+        }
+
+        // --- 4. HEDİYEYİ AÇMA VE MEKTUP EKRANINA GEÇİŞ (3. Ekrandan 4. Ekrana) ---
+        function openGift() {
+            // Hediye kutusu ekranını kapat, mektup ekranını aktif et
+            document.getElementById('gift-screen').classList.remove('active');
+            document.getElementById('message-screen').classList.add('active');
+            
+            // Mektup açıldığında arka planda konfeti yağmuru başlat
+            startConfetti();
+        }
+
+        // --- EKSTRA: COŞKULU KONFETİ EFEKTİ ---
+        function startConfetti() {
+            const container = document.getElementById('confetti-container');
+            const colors = ['#f7d070', '#e3ecf5', '#b36b19', '#ffffff', '#ff9f43'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDelay = Math.random() * 5 + 's';
+                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = Math.random() * 8 + 6 + 'px';
+                confetti.style.height = confetti.style.width;
+                container.appendChild(confetti);
             }
-        }
-
-        function sonFinal() {
-            document.getElementById('ekran4').classList.remove('gorunur');
-            document.getElementById('ekran5').classList.add('gorunur');
         }
     </script>
 </body>
