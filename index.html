@@ -2,131 +2,63 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Birthday! 🎁</title>
     <style>
-        /* Tüm sayfayı sıfır boşlukla kaplaması için ayarlar */
-        body, html { 
-            margin: 0; 
-            padding: 0; 
-            width: 100%; 
-            height: 100%; 
-            overflow: hidden; 
-            font-family: 'Segoe UI', sans-serif; 
-        }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: sans-serif; }
 
-        /* 1. SAHNE: PASTA EKRANI */
+        /* PASTA SAHNESİ */
         #sahne {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100vw; 
-            height: 100vh;
-            background-image: url('yanik.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            transition: background-image 0.5s ease, opacity 1s ease;
-            display: flex; 
-            justify-content: center; 
-            align-items: flex-end;
-        }
-        
-        /* Mum söndüğünde görseli değiştiren sınıf */
-        #sahne.sonuk { 
-            background-image: url('sonuk.jpg'); 
-        }
-
-        .btn {
-            padding: 15px 40px; 
-            font-size: 20px; 
-            cursor: pointer;
-            background: #f59e0b; 
-            border: none; 
-            border-radius: 50px;
-            color: white; 
-            margin-bottom: 50px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            font-weight: bold;
-            transition: transform 0.2s;
-        }
-        .btn:hover { transform: scale(1.05); }
-
-        /* 2. SAHNE: HEDİYE EKRANI */
-        #hediye-alani {
-            display: none; 
-            position: fixed; 
-            top: 0; left: 0; 
-            width: 100vw; 
-            height: 100vh;
-            background: linear-gradient(135deg, #fff7ed, #ffedd5); 
-            flex-direction: column;
-            justify-content: center; 
-            align-items: center;
-            opacity: 0; 
+            position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: url('yanik.jpeg'); /* Uzantı .jpeg yapıldı */
+            background-size: cover; background-position: center;
+            display: flex; justify-content: center; align-items: flex-end;
             transition: opacity 1s ease;
         }
 
-        .kutu { 
-            width: 150px; 
-            height: 150px; 
-            background: #e11d48; 
-            cursor: pointer; 
-            border-radius: 12px; 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            transition: transform 0.3s;
+        .btn { padding: 20px 40px; margin-bottom: 50px; cursor: pointer; background: #f59e0b; color: white; border: none; border-radius: 50px; font-size: 20px; }
+
+        /* HEDİYE SAHNESİ */
+        #hediye-alani {
+            display: none; width: 100vw; height: 100vh; background: #fff7ed;
+            flex-direction: column; justify-content: center; align-items: center;
         }
-        .kutu:hover { transform: scale(1.1); }
         
-        #mektup { 
-            display: none; 
-            padding: 40px; 
-            text-align: center; 
-            color: #451a03; 
-            max-width: 600px; 
-            background: white; 
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        /* Hediye kutusu için artık hediyeler.jpeg dosyanı kullanıyoruz */
+        .kutu { 
+            width: 200px; height: 200px; 
+            background-image: url('hediyeler.jpeg'); 
+            background-size: contain; background-repeat: no-repeat;
+            cursor: pointer; 
         }
+
+        #mektup { display: none; padding: 40px; text-align: center; color: #451a03; max-width: 600px; }
     </style>
 </head>
 <body>
 
-    <!-- Pasta Ekranı -->
     <div id="sahne">
-        <button class="btn" onclick="mumuSondur()">Mumu Üfle! 🌬️</button>
+        <button class="btn" onclick="mumuSondur()">Mumu Üfle!</button>
     </div>
 
-    <!-- Hediye Ekranı -->
     <div id="hediye-alani">
         <div class="kutu" onclick="hediyeyiAc()"></div>
-        <p style="margin-top: 20px; color: #e11d48; font-weight: bold;">Açmak için kutuya tıkla! 🎁</p>
-        
+        <p>Açmak için kutuya tıkla!</p>
         <div id="mektup">
-            <h1 style="color: #d97706;">Happy Birthday! 🎂✨</h1>
-            <p style="font-size: 1.2rem; line-height: 1.6;">
-                On this very special day, I want to thank you for your endless support, kindness, and dedication. 
-                Thank you for always believing in us and encouraging us to do our best. 
-                May this new year of your life bring you abundant health, endless happiness, and peace. 
-                May all your dreams come true.
-            </p>
+            <h1>Happy Birthday! 🎂✨</h1>
+            <p>On this very special day, I want to thank you for your endless support, kindness, and dedication. May all your dreams come true.</p>
         </div>
     </div>
 
     <script>
         function mumuSondur() {
-            // Görseli sönük olanla değiştir
-            document.getElementById('sahne').classList.add('sonuk');
+            // Sönük resim için .jpeg uzantısını kullan
+            document.getElementById('sahne').style.backgroundImage = "url('sonuk.jpeg')";
             
-            // 1 saniye bekle, sahneyi karart
             setTimeout(() => {
                 document.getElementById('sahne').style.opacity = '0';
-                
-                // Hediyeye geçiş
                 setTimeout(() => {
                     document.getElementById('sahne').style.display = 'none';
-                    const h = document.getElementById('hediye-alani');
-                    h.style.display = 'flex';
-                    setTimeout(() => { h.style.opacity = '1'; }, 50);
+                    document.getElementById('hediye-alani').style.display = 'flex';
                 }, 1000);
             }, 1000);
         }
