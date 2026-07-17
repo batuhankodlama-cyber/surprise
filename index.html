@@ -4,59 +4,85 @@
     <meta charset="UTF-8">
     <title>Doğum Günü Sürprizi</title>
     <style>
-        body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background: #000; color: #fff; font-family: sans-serif; text-align: center; overflow: hidden; }
-        .screen { display: none; width: 100%; height: 100%; justify-content: center; align-items: center; cursor: pointer; position: absolute; }
-        .active { display: flex; flex-direction: column; }
-        img { max-width: 80%; max-height: 80%; border-radius: 10px; }
+        body { margin: 0; padding: 0; background-color: #000; color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
         
-        /* Balon Animasyonu */
-        .balloon { position: absolute; bottom: -100px; width: 40px; height: 50px; background: radial-gradient(circle at 30% 30%, #ffcc00, #ff6600); border-radius: 50%; animation: floatUp 1.5s forwards; }
-        @keyframes floatUp { to { transform: translateY(-110vh); opacity: 0; } }
+        .screen { display: none; width: 100vw; height: 100vh; justify-content: center; align-items: center; flex-direction: column; cursor: pointer; position: absolute; }
+        .active { display: flex; }
         
-        #message-box { background: #e0f7fa; color: #333; padding: 20px; border-radius: 15px; max-width: 400px; display: none; }
+        img { max-width: 90%; max-height: 80%; border: 3px solid #444; border-radius: 15px; box-shadow: 0 0 20px rgba(255,255,255,0.1); }
+        
+        .info-box { background: rgba(255, 255, 255, 0.15); padding: 20px 40px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(10px); animation: pulse 2s infinite; }
+        
+        /* Balon Stili */
+        .balloon { position: absolute; bottom: -50px; width: 30px; height: 40px; background-color: #ff5e5e; border-radius: 50%; opacity: 0.8; }
+        
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        
+        #message-box { background: #fff; color: #333; padding: 30px; border-radius: 20px; max-width: 500px; line-height: 1.6; display: none; }
     </style>
 </head>
 <body>
 
-    <div id="screen1" class="screen active" onclick="startSequence()"><h1>Buraya tıklayın ve mumu üfleyin!</h1></div>
-    <div id="screen2" class="screen"><img src="sonuk.jpeg" alt="Mum Sönük"></div>
-    <div id="balloon-screen" class="screen"></div>
-    <div id="screen3" class="screen" onclick="openGift()"><img src="hediyeler.jpeg" alt="Hediyeler"><p>Açmak için tıklayın</p></div>
-    <div id="screen4" class="screen"><div id="message-box"><h2>Happy Birthday! 🎂✨</h2><p>On this very special day, I want to thank you for your endless support, kindness, and dedication. Thank you for always believing in us and encouraging us to do our best. May this new year of your life bring you abundant health, endless happiness, and peace. May all your dreams come true.</p></div></div>
+    <!-- 1. Ekran: Yanık Mum -->
+    <div id="screen1" class="screen active" onclick="nextScreen('screen2')">
+        <img src="yanik.jpeg" alt="Yanık Mum">
+        <div class="info-box" style="margin-top: 20px;">Mumu üflemek için tıklayın...</div>
+    </div>
+
+    <!-- 2. Ekran: Sönük Mum -->
+    <div id="screen2" class="screen" onclick="nextScreen('balloon-screen')">
+        <img src="sonuk.jpeg" alt="Sönük Mum">
+        <div class="info-box" style="margin-top: 20px;">Sıradaki sürpriz için tıklayın...</div>
+    </div>
+
+    <!-- 3. Ekran: Balonlar -->
+    <div id="balloon-screen" class="screen" onclick="nextScreen('screen3')">
+        <div id="balloon-container" style="width:100%; height:100%;"></div>
+        <div class="info-box">Hediyeye ulaşmak için tıklayın...</div>
+    </div>
+
+    <!-- 4. Ekran: Hediye -->
+    <div id="screen3" class="screen" onclick="showFinal()">
+        <img src="hediyeler.jpeg" alt="Hediyeler">
+        <div class="info-box" style="margin-top: 20px;">Paketi açmak için tıklayın...</div>
+    </div>
+
+    <!-- 5. Ekran: Mesaj -->
+    <div id="screen4" class="screen">
+        <div id="message-box">
+            <h2>Happy Birthday! 🎂✨</h2>
+            <p>On this very special day, I want to thank you for your endless support, kindness, and dedication. Thank you for always believing in us and encouraging us to do our best. May this new year of your life bring you abundant health, endless happiness, and peace. May all your dreams come true.</p>
+        </div>
+    </div>
 
     <script>
-        function startSequence() {
-            document.getElementById('screen1').classList.remove('active');
-            setTimeout(() => {
-                document.getElementById('screen2').classList.add('active');
-                setTimeout(() => {
-                    document.getElementById('screen2').classList.remove('active');
-                    showBalloons();
-                }, 1500);
-            }, 2000);
+        function nextScreen(nextId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(nextId).classList.add('active');
+            
+            if(nextId === 'balloon-screen') startBalloons();
         }
 
-        function showBalloons() {
-            const container = document.getElementById('balloon-screen');
-            container.classList.add('active');
-            for (let i = 0; i < 20; i++) {
+        function startBalloons() {
+            const container = document.getElementById('balloon-container');
+            for(let i=0; i<30; i++) {
                 let b = document.createElement('div');
                 b.className = 'balloon';
-                b.style.left = Math.random() * 100 + 'vw';
-                b.style.animationDelay = Math.random() * 0.5 + 's';
+                b.style.left = Math.random() * 90 + 'vw';
+                b.style.animation = `rise ${Math.random() * 2 + 2}s linear forwards`;
                 container.appendChild(b);
             }
-            setTimeout(() => {
-                container.classList.remove('active');
-                document.getElementById('screen3').classList.add('active');
-            }, 1500);
         }
 
-        function openGift() {
-            document.getElementById('screen3').classList.remove('active');
+        function showFinal() {
+            document.getElementById('screen3').style.display = 'none';
             document.getElementById('screen4').classList.add('active');
             document.getElementById('message-box').style.display = 'block';
         }
     </script>
+
+    <style>
+        @keyframes rise { from { transform: translateY(100vh); } to { transform: translateY(-10vh); } }
+    </style>
 </body>
 </html>
